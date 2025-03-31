@@ -11,6 +11,10 @@
 @import "./typesetting-article.css";
 @import "./utilities.css";
 
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant light (&:where(:not(.dark), :not(.dark) *));
+
+
 @layer base {
     :root {
         /* --openhuman-primary-hue: 220;
@@ -74,6 +78,21 @@
         font-variation-settings: normal;
         line-height: 1.5;
     }
+
+    .dark body {
+        @apply w-full bg-gray-900 text-gray-100;
+        background: linear-gradient(180deg, transparent 0, #111 300px), fixed 0 0 / 20px 20px radial-gradient(#313131 1px, transparent 0), fixed 10px 10px / 20px 20px radial-gradient(#313131 1px, transparent 0);
+    }
+
+    html {
+        @apply antialiased text-base scroll-pt-[--openhuman-navbar-height];
+        font-feature-settings:
+            "rlig" 1,
+            "calt" 1,
+            "ss01" 1;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
 }
 
 @theme {
