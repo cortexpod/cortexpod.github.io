@@ -17,83 +17,78 @@
 
 @layer base {
     :root {
-        /* --openhuman-primary-hue: 220;
-    --openhuman-primary-saturation: 90%; */
-
         --openhuman-primary-hue: 212deg;
         --openhuman-primary-saturation: 100%;
         --openhuman-navbar-height: 3.5rem;
         --openhuman-menu-height: 3.75rem;
         --openhuman-banner-height: 2.5rem;
-        --openhuman-bg: 255, 255, 255;
+        --openhuman-bg: 255 255 255;
     }
 
+    /* Global box model */
     *,
-    :after,
-    :before {
+    ::before,
+    ::after {
         box-sizing: border-box;
-        border: 0 solid #e5e7eb;
+        border-width: 0;
+        border-style: solid;
+        border-color: theme(colors.gray.200);
     }
 
+    /* Base HTML styles */
     html {
-        font-feature-settings:
-            "rlig" 1,
-            "calt" 1,
-            "ss01" 1,
-            "ss06" 1 !important;
         font-family:
-            Segoe UI,
+            "Segoe UI",
             ui-sans-serif,
             system-ui,
             -apple-system,
             BlinkMacSystemFont,
             Roboto,
-            Noto Sans,
+            "Noto Sans",
             Ubuntu,
             Cantarell,
-            Helvetica Neue,
+            "Helvetica Neue",
             Arial,
             sans-serif,
-            Apple Color Emoji,
-            Segoe UI Emoji,
-            Segoe UI Symbol,
-            Noto Color Emoji;
-    }
-
-    html {
-        scroll-padding-top: 4rem;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
+            "Apple Color Emoji",
+            "Segoe UI Emoji",
+            "Segoe UI Symbol",
+            "Noto Color Emoji";
+        tab-size: 4;
+        line-height: 1.5;
         font-feature-settings:
             "rlig" 1,
             "calt" 1,
-            "ss01" 1;
+            "ss01" 1,
+            "ss06" 1;
+        scroll-padding-top: var(--openhuman-navbar-height);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
         -webkit-tap-highlight-color: transparent;
         font-size: 1rem;
     }
 
-    html {
-        tab-size: 4;
-        font-feature-settings: normal;
-        font-variation-settings: normal;
-        line-height: 1.5;
-    }
-
+    /* Dark mode body styles */
     .dark body {
         @apply w-full bg-gray-900 text-gray-100;
-        background: linear-gradient(180deg, transparent 0, #111 300px), fixed 0 0 / 20px 20px radial-gradient(#313131 1px, transparent 0), fixed 10px 10px / 20px 20px radial-gradient(#313131 1px, transparent 0);
+        background:
+            linear-gradient(180deg, transparent 0, #111 300px),
+            fixed 0 0 / 20px 20px radial-gradient(#313131 1px, transparent 0),
+            fixed 10px 10px / 20px 20px radial-gradient(#313131 1px, transparent 0);
     }
 
+    /* HTML additional utilities */
     html {
-        @apply antialiased text-base scroll-pt-[--openhuman-navbar-height];
+        @apply antialiased text-base;
+        scroll-padding-top: var(--openhuman-navbar-height);
         font-feature-settings:
             "rlig" 1,
             "calt" 1,
             "ss01" 1;
         -webkit-tap-highlight-color: transparent;
     }
-    
 }
+
 
 @theme {
     /* Screens (as CSS custom properties) */
