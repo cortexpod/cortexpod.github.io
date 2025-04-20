@@ -17,12 +17,12 @@
 
 @layer base {
     :root {
-        --openhuman-primary-hue: 212deg;
-        --openhuman-primary-saturation: 100%;
-        --openhuman-navbar-height: 3.5rem;
-        --openhuman-menu-height: 3.75rem;
-        --openhuman-banner-height: 2.5rem;
-        --openhuman-bg: 255 255 255;
+        --cortexpod-primary-hue: 212deg;
+        --cortexpod-primary-saturation: 100%;
+        --cortexpod-navbar-height: 3.5rem;
+        --cortexpod-menu-height: 3.75rem;
+        --cortexpod-banner-height: 2.5rem;
+        --cortexpod-bg: 255 255 255;
     }
 
     /* Global box model */
@@ -61,7 +61,7 @@
             "calt" 1,
             "ss01" 1,
             "ss06" 1;
-        scroll-padding-top: var(--openhuman-navbar-height);
+        scroll-padding-top: var(--cortexpod-navbar-height);
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         -webkit-tap-highlight-color: transparent;
@@ -80,7 +80,7 @@
     /* HTML additional utilities */
     html {
         @apply antialiased text-base;
-        scroll-padding-top: var(--openhuman-navbar-height);
+        scroll-padding-top: var(--cortexpod-navbar-height);
         font-feature-settings:
             "rlig" 1,
             "calt" 1,
@@ -121,17 +121,17 @@
     --color-dark: #111;
 
     /* Primary Colors */
-    --color-primary-50: hsl(var(--openhuman-primary-hue) var(--openhuman-primary-saturation) 97%);
-    --color-primary-100: hsl(var(--openhuman-primary-hue) var(--openhuman-primary-saturation) 94%);
-    --color-primary-200: hsl(var(--openhuman-primary-hue) var(--openhuman-primary-saturation) 86%);
-    --color-primary-300: hsl(var(--openhuman-primary-hue) var(--openhuman-primary-saturation) 77%);
-    --color-primary-400: hsl(var(--openhuman-primary-hue) var(--openhuman-primary-saturation) 66%);
-    --color-primary-500: hsl(var(--openhuman-primary-hue) var(--openhuman-primary-saturation) 50%);
-    --color-primary-600: hsl(var(--openhuman-primary-hue) var(--openhuman-primary-saturation) 45%);
-    --color-primary-700: hsl(var(--openhuman-primary-hue) var(--openhuman-primary-saturation) 39%);
-    --color-primary-750: hsl(var(--openhuman-primary-hue) var(--openhuman-primary-saturation) 35%);
-    --color-primary-800: hsl(var(--openhuman-primary-hue) var(--openhuman-primary-saturation) 32%);
-    --color-primary-900: hsl(var(--openhuman-primary-hue) var(--openhuman-primary-saturation) 24%);
+    --color-primary-50: hsl(var(--cortexpod-primary-hue) var(--cortexpod-primary-saturation) 97%);
+    --color-primary-100: hsl(var(--cortexpod-primary-hue) var(--cortexpod-primary-saturation) 94%);
+    --color-primary-200: hsl(var(--cortexpod-primary-hue) var(--cortexpod-primary-saturation) 86%);
+    --color-primary-300: hsl(var(--cortexpod-primary-hue) var(--cortexpod-primary-saturation) 77%);
+    --color-primary-400: hsl(var(--cortexpod-primary-hue) var(--cortexpod-primary-saturation) 66%);
+    --color-primary-500: hsl(var(--cortexpod-primary-hue) var(--cortexpod-primary-saturation) 50%);
+    --color-primary-600: hsl(var(--cortexpod-primary-hue) var(--cortexpod-primary-saturation) 45%);
+    --color-primary-700: hsl(var(--cortexpod-primary-hue) var(--cortexpod-primary-saturation) 39%);
+    --color-primary-750: hsl(var(--cortexpod-primary-hue) var(--cortexpod-primary-saturation) 35%);
+    --color-primary-800: hsl(var(--cortexpod-primary-hue) var(--cortexpod-primary-saturation) 32%);
+    --color-primary-900: hsl(var(--cortexpod-primary-hue) var(--cortexpod-primary-saturation) 24%);
 
     --animate-fade-in: fade-in 0.3s ease forwards;
 
@@ -180,7 +180,7 @@
         }
     }
 
-    .openhuman-copy-icon {
+    .cortexpod-copy-icon {
         @apply animate-fade-in;
     }
 }

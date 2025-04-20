@@ -37,7 +37,7 @@ pre code:not([class*="twoslash-"]) {
         }
     }
 
-    html[data-openhuman-word-wrap] & {
+    html[data-cortexpod-word-wrap] & {
         @apply max-md:whitespace-pre-wrap;
     }
 }

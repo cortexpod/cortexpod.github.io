@@ -1,4 +1,4 @@
-.openhuman-steps h3 {
+.cortexpod-steps h3 {
     counter-increment: step;
 
     &:before {

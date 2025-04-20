@@ -1,6 +1,6 @@
 export function SidebarBottom() {
     return (
-        <div className="openhuman-sidebar-footer sticky bottom-0 flex items-center gap-2 mx-4 py-4 justify-end" data-toggle-animation="off">
+        <div className="cortexpod-sidebar-footer sticky bottom-0 flex items-center gap-2 mx-4 py-4 justify-end" data-toggle-animation="off">
             <button
                 title="Change language"
                 className="h-7 rounded-md px-2 text-left text-xs font-medium text-gray-600 transition-colors dark:text-gray-400 hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-primary-100/5 dark:hover:text-gray-50 grow"

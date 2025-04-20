@@ -19,7 +19,7 @@ export function Pre({ children, className, "data-filename": filename, "data-copy
     const copyButton = copy === "" && <CopyToClipboard className={filename ? "ml-auto" : ""} getValue={() => preRef.current?.querySelector("code")?.textContent || ""} />
 
     return (
-        <div className="openhuman-code relative mt-6 first:mt-0">
+        <div className="cortexpod-code relative mt-6 first:mt-0">
             {filename && (
                 <div
                     className={cn(

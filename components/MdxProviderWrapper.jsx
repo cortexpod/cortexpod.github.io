@@ -58,7 +58,7 @@ const components = {
     ),
     hr: (props) => <hr className="my-8 border-neutral-200/70 contrast-more:border-neutral-400 dark:border-primary-100/10 contrast-more:dark:border-neutral-400" {...props} />,
     a: AnchorLink,
-    table: (props) => <Table className="openhuman-scrollbar mt-6 p-0 first:mt-0" {...props} />,
+    table: (props) => <Table className="cortexpod-scrollbar mt-6 p-0 first:mt-0" {...props} />,
     p: (props) => <p className="mt-6 leading-7 first:mt-0" {...props} />,
     tr: Tr,
     th: Th,

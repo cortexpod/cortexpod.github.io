@@ -20,7 +20,7 @@ export function Callout({ children, type = "default", emoji = TypeToEmoji[type] 
     return (
         <div
             className={cn(
-                "openhuman-callout overflow-x-auto mt-6 flex rounded-lg border py-2 ltr:pr-4 rtl:pl-4",
+                "cortexpod-callout overflow-x-auto mt-6 flex rounded-lg border py-2 ltr:pr-4 rtl:pl-4",
                 "contrast-more:border-current contrast-more:dark:border-current",
                 classes[type]
             )}

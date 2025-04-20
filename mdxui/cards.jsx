@@ -3,11 +3,11 @@ import { Link } from "react-router-dom"
 
 const classes = {
     cards: cn(
-        "openhuman-cards mt-4 gap-4 grid",
-        "not-prose" // for openhuman-theme-blog
+        "cortexpod-cards mt-4 gap-4 grid",
+        "not-prose" // for cortexpod-theme-blog
     ),
     card: cn(
-        "openhuman-card group flex flex-col justify-start overflow-hidden rounded-lg border border-gray-200",
+        "cortexpod-card group flex flex-col justify-start overflow-hidden rounded-lg border border-gray-200",
         "text-current no-underline dark:shadow-none",
         "hover:shadow-gray-100 dark:hover:shadow-none shadow-gray-100",
         "active:shadow-sm active:shadow-gray-200",

@@ -1,8 +1,8 @@
-.openhuman-cards {
+.cortexpod-cards {
     grid-template-columns: repeat(auto-fill, minmax(max(250px, calc((100% - 1rem * 2) / var(--rows))), 1fr));
 }
 
-.openhuman-card {
+.cortexpod-card {
     img {
         @apply select-none;
     }

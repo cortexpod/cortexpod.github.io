@@ -2,9 +2,9 @@ import React from "react"
 
 export function Navbar({ children }) {
     return (
-        <div className="openhuman-nav-container sticky top-0 z-20 w-full bg-transparent print:hidden">
-            <div className="openhuman-nav-container-blur" />
-            <nav className="mx-auto flex h-[var(--openhuman-navbar-height)] max-w-[90rem] items-center justify-end gap-4 pl-[max(env(safe-area-inset-left),1.5rem)] pr-[max(env(safe-area-inset-right),1.5rem)]">
+        <div className="cortexpod-nav-container sticky top-0 z-20 w-full bg-transparent print:hidden">
+            <div className="cortexpod-nav-container-blur" />
+            <nav className="mx-auto flex h-[var(--cortexpod-navbar-height)] max-w-[90rem] items-center justify-end gap-4 pl-[max(env(safe-area-inset-left),1.5rem)] pr-[max(env(safe-area-inset-right),1.5rem)]">
                 {children}
                 {/* {themeConfig.logoLink ? (
           <NextLink
@@ -89,7 +89,7 @@ export function Navbar({ children }) {
                 {/* <button
           type="button"
           aria-label="Menu"
-          className="openhuman-hamburger rounded active:bg-gray-400/20 md:hidden"
+          className="cortexpod-hamburger rounded active:bg-gray-400/20 md:hidden"
           onClick={() => setMenu(!menu)}
         >
           <MenuIcon className={cn({ open: menu })} />

@@ -16,40 +16,40 @@ summary {
     @apply rounded;
 }
 
-.openhuman-content {
+.cortexpod-content {
     @apply text-slate-900 dark:text-slate-200;
 }
 
 @media (max-width: 767px) {
-    .openhuman-sidebar-container {
-        @apply fixed pt-[calc(var(--openhuman-navbar-height))] top-0 w-full bottom-0 z-[15] overscroll-contain;
+    .cortexpod-sidebar-container {
+        @apply fixed pt-[calc(var(--cortexpod-navbar-height))] top-0 w-full bottom-0 z-[15] overscroll-contain;
         transition: transform 0.8s cubic-bezier(0.52, 0.16, 0.04, 1);
         will-change: transform, opacity;
         contain: layout style;
         backface-visibility: hidden;
 
-        & > .openhuman-scrollbar {
+        & > .cortexpod-scrollbar {
             mask-image: linear-gradient(to bottom, transparent, #000 20px), linear-gradient(to left, #000 10px, transparent 10px);
         }
     }
 
-    .openhuman-banner-container ~ div {
-        .openhuman-sidebar-container {
+    .cortexpod-banner-container ~ div {
+        .cortexpod-sidebar-container {
             @apply pt-[6.5rem];
         }
-        &.openhuman-nav-container {
+        &.cortexpod-nav-container {
             @apply top-10 md:top-0;
         }
     }
-    .openhuman-banner-hidden {
-        .openhuman-banner-container ~ div .openhuman-sidebar-container {
+    .cortexpod-banner-hidden {
+        .cortexpod-banner-container ~ div .cortexpod-sidebar-container {
             @apply pt-16;
         }
-        .openhuman-nav-container {
+        .cortexpod-nav-container {
             @apply !top-0;
         }
     }
-    .openhuman-search .excerpt {
+    .cortexpod-search .excerpt {
         @apply overflow-hidden text-ellipsis;
         display: -webkit-box;
         line-clamp: 1;
@@ -60,9 +60,9 @@ summary {
 
 @media (prefers-reduced-motion: reduce) and (max-width: 767px) {
     article:before,
-    .openhuman-sidebar-container,
-    .openhuman-sidebar-container.open,
-    body.resizing .openhuman-sidebar-container {
+    .cortexpod-sidebar-container,
+    .cortexpod-sidebar-container.open,
+    body.resizing .cortexpod-sidebar-container {
         @apply transition-none;
     }
 }
@@ -73,8 +73,8 @@ summary::-webkit-details-marker {
 }
 
 @media (min-width: 768px) {
-    .openhuman-toc > .div,
-    .openhuman-sidebar-container {
+    .cortexpod-toc > .div,
+    .cortexpod-sidebar-container {
         mask-image: linear-gradient(to bottom, transparent, #000 20px), linear-gradient(to left, #000 10px, transparent 10px);
     }
 }
@@ -95,18 +95,18 @@ input[type="search"] {
     }
 }
 
-.openhuman-banner-hidden .openhuman-banner-container {
+.cortexpod-banner-hidden .cortexpod-banner-container {
     @apply hidden;
 }
 
-.openhuman-sidebar-container {
+.cortexpod-sidebar-container {
     [data-toggle-animation="show"] button {
         opacity: 0;
-        animation: openhuman-fadein 1s ease 0.2s forwards;
+        animation: cortexpod-fadein 1s ease 0.2s forwards;
     }
     [data-toggle-animation="hide"] button {
         opacity: 0;
-        animation: openhuman-fadein2 1s ease 0.2s forwards;
+        animation: cortexpod-fadein2 1s ease 0.2s forwards;
     }
 }
 
@@ -114,7 +114,7 @@ input[type="search"] {
     font-family: initial;
 }
 
-@keyframes openhuman-fadein {
+@keyframes cortexpod-fadein {
     0% {
         opacity: 0;
     }
@@ -123,7 +123,7 @@ input[type="search"] {
     }
 }
 
-@keyframes openhuman-fadein2 {
+@keyframes cortexpod-fadein2 {
     0% {
         opacity: 0;
     }
@@ -133,37 +133,37 @@ input[type="search"] {
 }
 
 body,
-.openhuman-nav-container-blur,
-.openhuman-toc-footer,
-.openhuman-sidebar-footer {
-    @apply bg-[rgb(var(--openhuman-bg))];
+.cortexpod-nav-container-blur,
+.cortexpod-toc-footer,
+.cortexpod-sidebar-footer {
+    @apply bg-[rgb(var(--cortexpod-bg))];
 }
-.openhuman-sidebar-container {
-    @apply max-md:bg-[rgb(var(--openhuman-bg))];
+.cortexpod-sidebar-container {
+    @apply max-md:bg-[rgb(var(--cortexpod-bg))];
 }
 
-.openhuman-nav-container-blur {
+.cortexpod-nav-container-blur {
     @apply pointer-events-none absolute z-[-1] size-full;
     @apply shadow-[0_2px_4px_rgba(0,0,0,.02),0_1px_0_rgba(0,0,0,.06)];
     @apply dark:shadow-[0_-1px_0_rgba(255,255,255,.1)_inset];
     @apply contrast-more:shadow-[0001px#000];
     @apply contrast-more:dark:shadow-[0001px#fff];
-    @apply backdrop-blur-md bg-[rgba(var(--openhuman-bg),.7)];
+    @apply backdrop-blur-md bg-[rgba(var(--cortexpod-bg),.7)];
 }
 
-.openhuman-toc-footer,
-.openhuman-sidebar-footer {
+.cortexpod-toc-footer,
+.cortexpod-sidebar-footer {
     @apply border-t dark:border-neutral-800;
     @apply contrast-more:shadow-none contrast-more:border-neutral-400 contrast-more:dark:border-neutral-400;
-    @apply shadow-[0-12px16pxrgb(var(--openhuman-bg))];
+    @apply shadow-[0-12px16pxrgb(var(--cortexpod-bg))];
 }
 
-.openhuman-search-results {
+.cortexpod-search-results {
     @apply border border-gray-200 text-gray-100 dark:border-neutral-800;
     @apply absolute top-full z-20 mt-2 overflow-auto overscroll-contain rounded-xl py-2.5 shadow-xl;
     @apply max-h-[min(calc(50vh-11rem-env(safe-area-inset-bottom)),400px)];
     @apply md:max-h-[min(calc(100vh-5rem-env(safe-area-inset-bottom)),400px)];
     @apply inset-x-0 ltr:md:left-auto rtl:md:right-auto;
     @apply contrast-more:border contrast-more:border-gray-900 contrast-more:dark:border-gray-50;
-    @apply backdrop-blur-lg bg-[rgb(var(--openhuman-bg),.8)];
+    @apply backdrop-blur-lg bg-[rgb(var(--cortexpod-bg),.8)];
 }

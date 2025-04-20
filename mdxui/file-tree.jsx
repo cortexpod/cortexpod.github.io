@@ -11,8 +11,8 @@ function Tree({ children }) {
     return (
         <div
             className={cn(
-                "openhuman-filetree mt-6 select-none text-sm text-gray-800 dark:text-gray-300",
-                "not-prose" // for openhuman-theme-blog
+                "cortexpod-filetree mt-6 select-none text-sm text-gray-800 dark:text-gray-300",
+                "not-prose" // for cortexpod-theme-blog
             )}
         >
             <div className="inline-block rounded-lg border px-4 py-2 dark:border-neutral-800">{children}</div>

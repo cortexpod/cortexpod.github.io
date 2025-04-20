@@ -5,7 +5,7 @@ export const DEFAULTTHEME = {
     // },
     // banner: {
     //     dismissible: true,
-    //     key: 'openhuman-banner'
+    //     key: 'cortexpod-banner'
     // },
     // chat: {
     //     icon: (

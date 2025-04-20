@@ -32,7 +32,7 @@ export const CopyToClipboard = ({ getValue, ...props }) => {
 
     return (
         <Button onClick={handleClick} title="Copy code" tabIndex={0} {...props}>
-            <IconToUse className="openhuman-copy-icon pointer-events-none h-4 w-4" />
+            <IconToUse className="cortexpod-copy-icon pointer-events-none h-4 w-4" />
         </Button>
     )
 }
