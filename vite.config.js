@@ -97,7 +97,7 @@ export default defineConfig({
         react(),
         createHtmlPlugin(),
         SitemapPlugin({
-            hostname: "https://mattergen.pages.dev",
+            hostname: "https://cortexpod.com",
             dynamicRoutes: ["/about", "/contact", "/markdown", "/sample", "/table", "/home"],
             // dynamicRoutes: routesList.map((route) => route.path).filter((path) => !path.includes(":"))
         }),

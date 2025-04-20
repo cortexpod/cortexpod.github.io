@@ -24,7 +24,7 @@ export const DEFAULTTHEME = {
     // },
     darkMode: true,
     direction: "ltr",
-    // docsRepositoryBase: 'https://github.com/MatterGen.github.io/MatterGen.github.io',
+    // docsRepositoryBase: 'https://github.com/cortexpod.github.io/cortexpod.github.io',
     // editLink: {
     //     component: function EditLink({ className, filePath, children }) {
     //         const editUrl = useGitEditUrl(filePath)

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://mattergen.pages.dev/sitemap.xml
+Sitemap: https://cortexpod.com/sitemap.xml

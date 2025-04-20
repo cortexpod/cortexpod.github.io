@@ -14,8 +14,8 @@ export function Header() {
         <Navbar>
             <Link className="flex items-center hovesr:opacity-75 ltr:mr-auto rtl:ml-auto" to="/">
                 <Logo height="40" width="40" className="h-10" />
-                <span className="max-md:hidden select-none font-extrabold ltr:ml-2 rtl:mr-2" title="mattergen.github.io: Gesture Generation Research Community">
-                    MatterGen
+                <span className="max-md:hidden select-none font-extrabold ltr:ml-2 rtl:mr-2" title="cortexpod.github.io: Gesture Generation Research Community">
+                    Cortexpod
                 </span>
             </Link>
             {/* <a className="text-sm contrast-more:text-gray-700 contrast-more:dark:text-gray-100 max-md:hidden whitespace-nowrap font-medium subpixel-antialiased" aria-current="true" href="/docs/getting-started">Docs</a> */}
@@ -43,7 +43,7 @@ export function Header() {
                 className=" contrast-more:text-gray-700 contrast-more:dark:text-gray-100 max-md:hidden whitespace-nowrap text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
                 aria-current="false"
             >
-                MatterGen ↗
+                Cortexpod ↗
             </a>
             <a href="https://github.com/openhuman-ai" target="blank" rel="noreferrer">
                 <Github />
