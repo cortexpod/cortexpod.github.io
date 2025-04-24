@@ -12,12 +12,20 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
+    <!-- iOS Web App Title -->
+    <meta name="apple-mobile-web-app-title" content="CortexPod">
+
+    <!-- iOS Web App Behavior -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="apple-touch-icon" href="/web-app-manifest-192x192.png" />
+
+    <!-- Icon for iOS -->
     <link href="/styles/globals.css" rel="stylesheet" />
-    <!--app-head-->
 </head>
 
 <body className="cortexpod-banner-hidden">
-    <div id="root"><!--app-html--></div>
+    <div id="root"></div>
     <script type="module" src="/src/index.jsx"></script>
 </body>
 
