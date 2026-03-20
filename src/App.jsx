@@ -9,7 +9,7 @@ import { Footer } from "@/components/layout/footer"
 import { Sidebar } from "@/components/layout/sidebar"
 import { SidebarBottom } from "@/components/layout/sidebar-bottom"
 
-import Home from "./routes/table/page.mdx"
+import Home from "./routes/home/page.mdx"
 import { Navbar } from "@/components/layout/navbar"
 import { TOC } from "@/components/layout/toc"
 const About = lazy(() => import("./routes/about/page.mdx"))
@@ -18,7 +18,7 @@ const Materials = lazy(() => import("./routes/materials/page.mdx"))
 const Contact = lazy(() => import("./routes/contact/page.mdx"))
 const Markdown = lazy(() => import("./routes/markdown/page.mdx"))
 const Sample = lazy(() => import("./routes/sample/page.mdx"))
-const Table = lazy(() => import("./routes/home/page.mdx"))
+const Table = lazy(() => import("./routes/table/page.mdx"))
 const Theme = lazy(() => import("./routes/theme/page.mdx"))
 
 // import Home from "./routes/home/page.mdx"
