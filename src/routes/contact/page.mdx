@@ -133,7 +133,7 @@ CortexChip's CMFC hardware scheduler:
 - 256 hardware priority lanes, each mapped to one Pod instance
 - Preemptive scheduling: a high-priority interactive Pod can interrupt a low-priority batch Pod after the current decode step (average 0.5–2ms granularity)
 - Context switch implemented as a hardware state machine: saves Pod register file + SRAM slot state in 1.2ms average, loads next Pod state in 0.8ms
-- Total preemptive context switch: **<2ms end-to-end**
+- Total preemptive context switch: **&lt;2ms end-to-end**
 
 This 10–25x improvement in context switch latency is the primary reason CortexChip can support 256 concurrent Pods while maintaining <50ms TTFT for interactive SLA classes.
 
