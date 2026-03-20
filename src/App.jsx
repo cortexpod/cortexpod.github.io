@@ -20,6 +20,8 @@ const Engineering = lazy(() => import("./routes/engineering/page.mdx"))
 const Competitive = lazy(() => import("./routes/competitive/page.mdx"))
 const Scripts = lazy(() => import("./routes/scripts/page.mdx"))
 const Agent = lazy(() => import("./routes/agent/page.mdx"))
+const Hilberg = lazy(() => import("./routes/hilberg/page.mdx"))
+const Riemannian = lazy(() => import("./routes/riemannian/page.mdx"))
 
 // import Home from "./routes/home/page.mdx"
 // import About from "./routes/about/page.mdx"
@@ -67,6 +69,8 @@ function App() {
                                 <Route path="/engineering" element={<Engineering />} />
                                 <Route path="/agent" element={<Agent />} />
                                 <Route path="/scripts" element={<Scripts />} />
+                                <Route path="/hilberg" element={<Hilberg />} />
+                                <Route path="/riemannian" element={<Riemannian />} />
                             </Routes>
                         </MdxProviderWrapper>
                     </main>

@@ -1,0 +1,245 @@
+# Hilberg's Hypothesis
+
+**Hilberg's hypothesis** (còn gọi là **Hilberg's law**) là một giả thuyết trong [ngôn ngữ học định lượng](https://en.wikipedia.org/wiki/Quantitative_linguistics) hoặc một statistical law trong [lý thuyết thông tin](https://en.wikipedia.org/wiki/Information_theory). Nó phát biểu rằng các số đo thông tin trong các văn bản [ngôn ngữ tự nhiên](https://en.wikipedia.org/wiki/Natural_language) hoặc các mẫu của các [quá trình ngẫu nhiên](https://en.wikipedia.org/wiki/Stochastic_processes) cụ thể tăng trưởng như một **lũy thừa con tuyến tính** (sublinear power) của độ dài mẫu, có thể cộng thêm một số hạng tuyến tính. Nó liên hệ chặt chẽ với [Zipf's law](https://en.wikipedia.org/wiki/Zipf%27s_law) và [neural scaling law](https://en.wikipedia.org/wiki/Neural_scaling_law) cho các [large language models](https://en.wikipedia.org/wiki/Large_language_model).
+
+Hilberg's hypothesis được đề xuất bởi kỹ sư viễn thông người Đức **Wolfgang Hilberg** vào năm 1990, dựa trên dữ liệu ban đầu được công bố bởi [Claude Shannon](https://en.wikipedia.org/wiki/Claude_Shannon) năm 1951 về khả năng dự đoán của văn bản tiếng Anh. Hilberg quan sát thấy rằng lượng thông tin mới mỗi ký tự có vẻ giảm theo độ dài ngữ cảnh theo cách nhất quán với một **power law**.
+
+---
+
+## Phát biểu chính thức
+
+Phân tích của Hilberg ngụ ý rằng [Shannon entropy](https://en.wikipedia.org/wiki/Shannon_entropy) của các khối văn bản có độ dài $n$ tăng xấp xỉ theo:
+
+$$H(n) \approx h \cdot n + A \cdot n^\beta$$
+
+trong đó:
+
+| Ký hiệu | Ý nghĩa |
+|---------|---------|
+| $h$ | [Entropy rate](https://en.wikipedia.org/wiki/Entropy_rate) của quá trình |
+| $A$ | Hằng số tỷ lệ |
+| $\beta$ | **Hilberg exponent** ($0 < \beta < 1$) |
+
+Số hạng tỷ lệ với $n^\beta$ thể hiện một **hiệu ứng bộ nhớ** (memory effect), gợi ý rằng ngôn ngữ của con người mang một lượng lớn thông tin theo cách lặp đi lặp lại. Hilberg ban đầu giả định $\beta = 1/2$ dựa trên bằng chứng trực quan còn ít ỏi. Bài báo của Hilberg được đăng trên một tạp chí viễn thông địa phương và ban đầu được chú ý bởi các nhà vật lý làm việc trong lĩnh vực [complex systems](https://en.wikipedia.org/wiki/Complex_systems).
+
+Hilberg's hypothesis ngụ ý rằng ngôn ngữ viết hoặc nói có bộ nhớ **tiềm năng vô hạn** (potentially infinite) hoặc [long-range statistical dependencies](https://en.wikipedia.org/wiki/Long-range_dependence) mà không thể được nắm bắt bởi các [finite-state hidden Markov models](https://en.wikipedia.org/wiki/Hidden_Markov_models).
+
+---
+
+## Hilberg's Law — Dạng tổng quát
+
+Thuật ngữ "Hilberg's law" hoặc "Hilberg's condition" thường áp dụng cho bất kỳ [stationary process](https://en.wikipedia.org/wiki/Stationary_process) nào thỏa mãn power-law scaling của $Q(n)$:
+
+$$Q(n) \propto n^\beta, \quad 0 < \beta < 1$$
+
+trong đó $Q(n)$ có thể biểu diễn các số đo thông tin khác nhau, chẳng hạn:
+
+- [Shannon entropy](https://en.wikipedia.org/wiki/Shannon_entropy)
+- [Kolmogorov complexity](https://en.wikipedia.org/wiki/Kolmogorov_complexity) (có hoặc không có ràng buộc tài nguyên)
+- Độ dài của một [universal code](https://en.wikipedia.org/wiki/Universal_code_(data_compression))
+
+Trong ngữ cảnh [deep learning](https://en.wikipedia.org/wiki/Deep_learning), thuật ngữ **neural scaling law** được dùng cho các quan hệ power-law tương tự mô tả cách hiệu năng của LLM, đo bằng [cross entropy](https://en.wikipedia.org/wiki/Cross_entropy), cải thiện theo kích thước dữ liệu, số tham số, hoặc lượng tính toán.
+
+### Dạng mutual information
+
+Một biểu diễn khác sử dụng [mutual information](https://en.wikipedia.org/wiki/Mutual_information) giữa hai khối văn bản liền kề có độ dài $n$:
+
+$$I_n = I(X_1^n ; X_{n+1}^{2n})$$
+
+Sử dụng khái niệm này, Hilberg's law tương đương với:
+
+$$I_n \propto n^\beta$$
+
+Dạng này không phụ thuộc vào giá trị chính xác của entropy rate $h$ và được dùng trong các nghiên cứu lý thuyết.
+
+### Giá trị thực nghiệm của Hilberg exponent
+
+Giá trị của Hilberg exponent $\beta$ phụ thuộc quan trọng vào số đo thông tin được áp dụng hoặc thuật toán nén trong trường hợp universal code. Đồng thời, nó thể hiện một mức độ [universality](https://en.wikipedia.org/wiki/Linguistic_universal) nhất định qua các ngôn ngữ và hệ thống chữ viết:
+
+$$\beta \approx 0.7$$
+
+cho [prediction by partial matching (PPM)](https://en.wikipedia.org/wiki/Prediction_by_partial_matching) chạy trên corpus tin tức tiếng Anh, Pháp, Nga, Hàn, Trung, và Nhật.
+
+---
+
+## Các mô hình toy
+
+Ý nghĩa trực giác của Hilberg's hypothesis có thể được thúc đẩy bởi một số **toy models** của [stationary processes](https://en.wikipedia.org/wiki/Stationary_process), liên kết Hilberg's law với Zipf's law cho từ vựng tùy ý không giới hạn cần được học thuộc lòng.
+
+### Santa Fe Process
+
+Một mô hình đơn giản của stochastic process thỏa mãn Hilberg's law là **Santa Fe process**.
+
+Santa Fe process là một [stationary non-ergodic process](https://en.wikipedia.org/wiki/Stationary_ergodic_process) gồm các cặp $(W, X)$, trong đó:
+
+- $(W_i)_{i \geq 1}$: dãy các số tự nhiên ngẫu nhiên **độc lập** phân phối theo [Zipf's law](https://en.wikipedia.org/wiki/Zipf%27s_law) — gọi là **narration** (tự sự)
+- $(X_k)_{k \geq 1}$: [Bernoulli process](https://en.wikipedia.org/wiki/Bernoulli_process) đồng đều, tức là dãy tung đồng xu công bằng — gọi là **knowledge** (kiến thức)
+
+Các biến $X_k$ riêng lẻ được gọi là **(independent elementary) facts** (sự kiện cơ bản độc lập).
+
+Quá trình hoạt động như sau: mỗi $W_i$ trỏ đến một fact $X_{W_i}$, và văn bản sinh ra bao gồm các ký hiệu mã hóa các fact này theo thứ tự được chỉ định bởi narration. Do Zipf's law, các fact phổ biến được nhắc đến thường xuyên (lặp lại), trong khi các fact hiếm chỉ xuất hiện một vài lần — tạo ra đặc tính bộ nhớ dài hạn.
+
+Santa Fe process có **entropy rate dương**: $h > 0$.
+
+### Perigraphic Process
+
+Hilberg's law có thể xuất hiện cho các **non-ergodic** hoặc **perigraphic processes** tùy thuộc vào việc người ta xem xét Shannon entropy hay Kolmogorov complexity làm số đo thông tin.
+
+Một **perigraphic process** gần đúng là một [ergodic component](https://en.wikipedia.org/wiki/Ergodicity) ngẫu nhiên theo nghĩa thuật toán của một [non-ergodic process](https://en.wikipedia.org/wiki/Stationary_ergodic_process) với một [non-atomic invariant sigma-algebra](https://en.wikipedia.org/wiki/Invariant_sigma-algebra).
+
+Ví dụ về perigraphic process là **modified Santa Fe process** gồm các cặp $(W, \Omega)$ trong đó $\Omega = (\Omega_k)_{k \geq 1}$ là một chuỗi nhị phân ngẫu nhiên theo nghĩa thuật toán **cố định**, chẳng hạn như [halting probability](https://en.wikipedia.org/wiki/Halting_probability) $\Omega$ của Chaitin.
+
+### Mixing Process
+
+Hilberg's law cũng có thể xuất hiện cho một số **mixing processes**. Ví dụ là modified Santa Fe process gồm các cặp $(W, X)$ trong đó $(X_k)$ là tập hợp các **binary Markov processes** độc lập, trong đó xác suất flip nhỏ hơn xác suất nhắc đến:
+
+$$p_{\text{flip},k} < p_{\text{mention},k}$$
+
+### Multiperiodic Process
+
+Các ví dụ mặc định của Santa Fe processes có entropy rate dương. Cũng tồn tại các ví dụ về processes với **entropy rate tiệm cận 0** tuân theo Hilberg's law, gọi là **multiperiodic processes**.
+
+---
+
+## Liên hệ với các luật khác
+
+### Liên hệ với Zipf's law và Heaps' law
+
+Hilberg's law có thể được liên kết diễn dịch với [Zipf's law](https://en.wikipedia.org/wiki/Zipf%27s_law) và [Heaps' law](https://en.wikipedia.org/wiki/Heaps%27_law) cho các từ con hoặc chunks giống từ thông qua:
+
+- [Grammar-based codes](https://en.wikipedia.org/wiki/Grammar-based_codes) và [prediction by partial matching](https://en.wikipedia.org/wiki/Prediction_by_partial_matching)
+- [Non-ergodic processes](https://en.wikipedia.org/wiki/Stationary_ergodic_process)
+- [Data-processing inequality](https://en.wikipedia.org/wiki/Data-processing_inequality) cho mutual information
+
+Có một kết quả tổng quát về các stationary processes, gọi là **theorem about facts and words**, phát biểu rằng mutual information giữa hai khối văn bản liền kề được kẹp giữa (*sandwiched*) bởi:
+
+- Số lượng **independent elementary facts** (cận dưới)
+- Số lượng các chuỗi **distinct word-like strings** được thể hiện trong khối văn bản ghép (cận trên)
+
+Chính thức:
+
+$$\mathcal{F}(n) \lesssim I_n \lesssim \mathcal{W}(n)$$
+
+trong đó $\mathcal{F}(n)$ là số facts độc lập và $\mathcal{W}(n)$ là số từ khác nhau.
+
+### Liên hệ với Neural Scaling Law
+
+Liên kết diễn dịch giữa Hilberg's law và [neural scaling law](https://en.wikipedia.org/wiki/Neural_scaling_law) là chủ đề nghiên cứu đang tiến hành. Dębowski (2025) đề xuất một đường dẫn từ Zipf's law → Heaps' law → Hilberg's hypothesis → neural scaling law:
+
+$$\text{Zipf} \Rightarrow \text{Heaps} \Rightarrow \text{Hilberg} \Rightarrow \text{Neural Scaling}$$
+
+---
+
+## Liên hệ với Finite-State Models
+
+Hilberg's hypothesis được thảo luận như bằng chứng rằng việc tạo ra ngôn ngữ đòi hỏi **bộ nhớ vô hạn**, trái ngược với [finite-state Markov models](https://en.wikipedia.org/wiki/Markov_models) và [hidden Markov models](https://en.wikipedia.org/wiki/Hidden_Markov_models). Tổng quát, Hilberg's law không tương thích với finite-state hidden Markov models.
+
+Mutual information giữa quá khứ và tương lai được gọi là **excess entropy** hoặc **predictive information**:
+
+$$E = I(X_{-\infty}^0 ; X_1^\infty)$$
+
+Các điều kiện liên quan:
+
+- **Finite-state hidden Markov models** và non-degenerate **autoregressive moving-average Gaussian processes** thỏa mãn: $E < \infty$
+- **Non-ergodic processes** với non-atomic invariant sigma-algebra thỏa mãn: $E = \infty$
+- Cũng tồn tại **countably infinite-state hidden Markov models** thỏa mãn cả $E = \infty$ lẫn Hilberg's law.
+
+---
+
+## Liên hệ với Maximal Repetition Length
+
+Một liên hệ ít trực tiếp hơn là Hilberg's law với **power-law logarithmic scaling** của độ dài lặp lại tối đa, được quan sát thực nghiệm cho ngôn ngữ tự nhiên. Cụ thể, nếu $R(n)$ là độ dài lặp lại tối đa trong một văn bản độ dài $n$, thì:
+
+$$R(n) \propto (\log n)^{1/(1-\beta)}$$
+
+Liên kết này liên quan đến **power-law growth** của [Rényi entropies](https://en.wikipedia.org/wiki/R%C3%A9nyi_entropy) (thay vì Shannon entropy).
+
+---
+
+## Liên hệ với Long-Range Dependence (Gaussian Processes)
+
+Trong trường hợp các **non-degenerate Gaussian processes** có giá trị thực, điều kiện $I_n \to \infty$ (excess entropy vô hạn) tương đương với:
+
+$$\sum_{k=1}^\infty |\pi_k| = \infty$$
+
+trong đó $\pi_k$ là **partial autocorrelation function** (PACF).
+
+Ngoài ra, nếu Gaussian process có **spectral density** dương và liên tục, thì điều kiện trên tương đương với:
+
+$$\sum_{k=1}^\infty |r(k)| = \infty$$
+
+trong đó $r(k)$ là **autocorrelation function** (ACF).
+
+Tương phản, điều kiện **long-range dependence** là:
+
+$$\sum_{k=1}^\infty r(k) = \infty$$
+
+tương đương với điều kiện trước đó nếu ACF giảm chính xác theo power law: $r(k) \sim k^{-\gamma}$ với $0 < \gamma < 1$.
+
+Do đó, **Hilberg's law ngụ ý long-range dependence** nếu:
+1. Process là Gaussian
+2. Spectral density dương và liên tục
+3. ACF tuân theo power law
+
+### Slow decay of two-point mutual information
+
+Với các stationary processes trên countable alphabet, vẫn chưa biết liệu Hilberg's law (dưới một điều kiện nhẹ) có ngụ ý sự giảm chậm của **two-point mutual information** hay không:
+
+$$I(X_0; X_k) \to 0 \text{ chậm khi } k \to \infty$$
+
+điều này có vẻ đúng với ngôn ngữ tự nhiên. Với non-ergodic Santa Fe processes, người ta cũng quan sát $I(X_0; X_k) > 0$ với $k > 0$.
+
+---
+
+## Tầm quan trọng
+
+Hilberg's hypothesis kết nối **ngôn ngữ học định lượng**, **lý thuyết thông tin**, và **nghiên cứu machine learning hiện đại** về scaling behavior. Bằng các định lý toán học, Hilberg's law có thể được liên hệ với một số điều kiện tương tự cho các stationary processes trên tập hữu hạn, vô hạn đếm được, hoặc không đếm được.
+
+Cơ chế phủ nhận finite-state models dựa trên Hilberg's hypothesis gần với **Zipf's law** cho từ vựng tùy ý không giới hạn cần được học thuộc lòng. Cơ chế này khác với cách phủ nhận finite-state models dựa trên **stack không giới hạn** của push-down automaton trong xử lý cú pháp ngôn ngữ tự nhiên — lập luận sau được phát triển bởi [Noam Chomsky](https://en.wikipedia.org/wiki/Noam_Chomsky) trong *Syntactic Structures* (1957).
+
+---
+
+## Xem thêm
+
+- [Shannon entropy](https://en.wikipedia.org/wiki/Shannon_entropy)
+- [Kolmogorov complexity](https://en.wikipedia.org/wiki/Kolmogorov_complexity)
+- [Power laws](https://en.wikipedia.org/wiki/Power_law)
+- [Neural scaling law](https://en.wikipedia.org/wiki/Neural_scaling_law)
+- [Zipf's law](https://en.wikipedia.org/wiki/Zipf%27s_law)
+- [Heaps' law](https://en.wikipedia.org/wiki/Heaps%27_law)
+- [Excess entropy](https://en.wikipedia.org/wiki/Excess_entropy)
+- [Long-range dependence](https://en.wikipedia.org/wiki/Long-range_dependence)
+- [Ergodicity](https://en.wikipedia.org/wiki/Ergodicity)
+
+---
+
+## Tài liệu tham khảo
+
+1. Hilberg, W. (1990). "Der bekannte Grenzwert der redundanzfreien Information in Texten — eine Fehlinterpretation der Shannonschen Experimente?" *Frequenz* 44(9–10): 243. [doi:10.1515/FREQ.1990.44.9-10.243](https://doi.org/10.1515/FREQ.1990.44.9-10.243)
+2. Shannon, C. E. (1951). "Prediction and Entropy of Printed English." *Bell System Technical Journal* 30: 50–64. [doi:10.1002/j.1538-7305.1951.tb01366.x](https://doi.org/10.1002/j.1538-7305.1951.tb01366.x)
+3. Dębowski, Ł. (2015). "Hilberg Exponents: New Measures of Long Memory in the Process." *IEEE Transactions on Information Theory* 61(10): 5716–5726. [arXiv:1403.1757](https://arxiv.org/abs/1403.1757)
+4. Ebeling, W.; Nicolis, G. (1991). "Entropy of Symbolic Sequences: The Role of Correlations." *Europhysics Letters* 14(3): 191–196.
+5. Ebeling, W.; Pöschel, T. (1994). "Entropy and Long-Range Correlations in Literary English." *Europhysics Letters* 26(4): 241–246. [arXiv:cond-mat/0204108](https://arxiv.org/abs/cond-mat/0204108)
+6. Bialek, W.; Nemenman, I.; Tishby, N. (2001). "Predictability, Complexity, and Learning." *Neural Computation* 13(11): 2409–2463.
+7. Crutchfield, J. P.; Feldman, D. P. (2003). "Regularities unseen, randomness observed: Levels of entropy convergence." *Chaos* 13(1): 25–54.
+8. Dębowski, Ł. (2021). "A Refutation of Finite-State Language Models through Zipf's Law for Factual Knowledge." *Entropy* 23(9): 1148. [PMC8465033](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8465033)
+9. Achille, A.; Soatto, S. (2025). "AI Agents as Universal Task Solvers." [arXiv:2510.12066](https://arxiv.org/abs/2510.12066)
+10. Takahira, R.; Tanaka-Ishii, K.; Dębowski, Ł. (2016). "Entropy Rate Estimates for Natural Language." *Entropy* 18(10): 364.
+11. Kaplan, J. et al. (2020). "Scaling Laws for Neural Language Models." [arXiv:2001.08361](https://arxiv.org/abs/2001.08361)
+12. Dębowski, Ł. (2020). *Information Theory Meets Power Laws*. Wiley. [doi:10.1002/9781119625384](https://doi.org/10.1002/9781119625384)
+13. Tanaka-Ishii, K. (2021). *Statistical Universals of Language*. Springer.
+14. Dębowski, Ł. (2011). "On the Vocabulary of Grammar-Based Codes and the Logical Consistency of Texts." *IEEE Transactions on Information Theory* 57(7): 4589–4599. [arXiv:0810.3125](https://arxiv.org/abs/0810.3125)
+15. Dębowski, Ł. (2018). "Is Natural Language a Perigraphic Process?" *Entropy* 20(2): 85. [arXiv:1706.04432](https://arxiv.org/abs/1706.04432)
+16. Dębowski, Ł. (2012). "Mixing, Ergodic, and Nonergodic Processes with Rapidly Growing Information Between Blocks." *IEEE Transactions on Information Theory* 58(6): 3392–3401. [arXiv:1103.3952](https://arxiv.org/abs/1103.3952)
+17. Hutter, M. (2021). "Learning Curve Theory." [arXiv:2102.04074](https://arxiv.org/abs/2102.04074)
+18. Dębowski, Ł. (2023). "Multiperiodic Processes: Ergodic Sources with a Sublinear Entropy." [arXiv:2302.09049](https://arxiv.org/abs/2302.09049)
+19. Dębowski, Ł. (2025). "From Zipf's Law to Neural Scaling through Heaps' Law and Hilberg's Hypothesis." [arXiv:2512.13491](https://arxiv.org/abs/2512.13491)
+20. Futrell, R.; Hahn, M. (2025). "Linguistic structure from a bottleneck on sequential information processing." *Nature Human Behaviour.*
+21. Travers, N.; Crutchfield, J. (2014). "Infinite Excess Entropy Processes with Countable-State Generators." *Entropy* 16(3): 1396–1413. [arXiv:1111.3393](https://arxiv.org/abs/1111.3393)
+22. Dębowski, Ł. (2014). "On Hidden Markov Processes with Infinite Excess Entropy." *Journal of Theoretical Probability* 27(2): 539–551. [arXiv:1211.0834](https://arxiv.org/abs/1211.0834)
+23. Dębowski, Ł. (2015). "Maximal Repetitions in Written Texts: Finite Energy Hypothesis vs. Strong Hilberg Conjecture." *Entropy* 17(8): 5903–5919.
+24. Dębowski, Ł. (2025). "Repetition and recurrence times: Dual statements and summable mixing rates." *Electronic Communications in Probability* 30.
+25. Lin, H.; Tegmark, M. (2017). "Critical Behavior in Physics and Probabilistic Formal Languages." *Entropy* 19(7): 299. [arXiv:1606.06737](https://arxiv.org/abs/1606.06737)
+26. Wieczyński, P.; Dębowski, Ł. (2025). "Long-Range Dependence in Word Time Series: The Cosine Correlation of Embeddings." *Entropy* 27(6): 613.
+27. Li, L. M. (2006). "Some Notes on Mutual Information Between Past and Future." *Journal of Time Series Analysis* 27(2): 309–322.
+28. Beran, J. (2017). *Statistics for Long-Memory Processes.* [doi:10.1201/9780203738481](https://doi.org/10.1201/9780203738481)

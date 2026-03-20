@@ -81,7 +81,12 @@ export default defineConfig({
                 ],
                 [rehypeParseCodeMeta, { defaultShowCopyCode: true }],
                 rehypeStringify,
-                rehypeKatex,
+                [
+                    rehypeKatex,
+                    {
+                        strict: (errorCode) => (errorCode === "newLineInDisplayMode" ? "ignore" : "warn"),
+                    },
+                ],
                 [
                     rehypeShiki,
                     {

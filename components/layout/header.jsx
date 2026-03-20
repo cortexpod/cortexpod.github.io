@@ -49,7 +49,7 @@ export function Header() {
                 <Github />
                 <span className="sr-only">GitHub</span>
             </a>
-            <a href="https://twitter.com/cortexpod" target="blank" rel="noreferrer">
+            <a href="https://twitter.com/cortexpodai" target="blank" rel="noreferrer">
                 <Twitter />
             </a>
         </Navbar>

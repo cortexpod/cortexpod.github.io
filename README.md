@@ -1,5 +1,5 @@
 # CortexPod: A Silicon-First Platform for Distributed Agent Inference
-<!-- # CortexPod - Brain-Inspired, multi-modal units for digital cognition -->
+<!-- # CortexPod - A Silicon-First Platform for Distributed Agent Inference -->
 
 ---
 

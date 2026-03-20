@@ -6,12 +6,16 @@
         @apply opacity-100;
     }
 
-    &:after {
+    &::after {
         @apply content-['#'] px-1;
-        @apply text-gray-300 dark:text-neutral-700;
+        @apply text-gray-300;
         /* span:target + & {
             @apply text-gray-400;
             @apply dark:text-neutral-500;
         } */
     }
+}
+
+.dark .subheading-anchor::after {
+    @apply text-neutral-700;
 }

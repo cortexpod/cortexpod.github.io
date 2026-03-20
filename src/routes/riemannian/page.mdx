@@ -1,0 +1,401 @@
+# Riemannian Manifold
+
+Trong [hình học vi phân](https://en.wikipedia.org/wiki/Differential_geometry), một **Riemannian manifold** (hay **không gian Riemann**) là một không gian hình học trên đó nhiều khái niệm hình học như khoảng cách, góc, độ dài, thể tích và độ cong được định nghĩa. [Không gian Euclid](https://en.wikipedia.org/wiki/Euclidean_space), mặt cầu $n$ chiều $S^n$, [không gian hyperbolic](https://en.wikipedia.org/wiki/Hyperbolic_space), và các mặt trơn trong không gian ba chiều như ellipsoid và paraboloid đều là các ví dụ của Riemannian manifold. Riemannian manifolds mang tên của nhà toán học người Đức [Bernhard Riemann](https://en.wikipedia.org/wiki/Bernhard_Riemann), người đã hình thành chúng lần đầu tiên vào năm 1854.
+
+Về mặt hình thức, một **Riemannian metric** (hay đơn giản là *metric*) trên một [smooth manifold](https://en.wikipedia.org/wiki/Smooth_manifold) là một lựa chọn biến thiên trơn của [tích trong](https://en.wikipedia.org/wiki/Inner_product) cho mỗi [tangent space](https://en.wikipedia.org/wiki/Tangent_space) của manifold. Một Riemannian manifold là một smooth manifold cùng với một Riemannian metric. Các kỹ thuật giải tích vi tích phân được dùng để rút dữ liệu hình học từ Riemannian metric: tích phân dẫn đến hàm khoảng cách Riemannian, trong khi đạo hàm được dùng để định nghĩa độ cong và [parallel transport](https://en.wikipedia.org/wiki/Parallel_transport).
+
+[Riemannian geometry](https://en.wikipedia.org/wiki/Riemannian_geometry), lĩnh vực nghiên cứu Riemannian manifolds, có mối liên hệ sâu với nhiều lĩnh vực toán học khác, bao gồm topo học hình học, hình học phức, và hình học đại số. Ứng dụng bao gồm vật lý (đặc biệt là [thuyết tương đối tổng quát](https://en.wikipedia.org/wiki/General_relativity) và [gauge theory](https://en.wikipedia.org/wiki/Gauge_theory)), đồ họa máy tính, machine learning, và bản đồ học.
+
+---
+
+## Lịch sử
+
+Năm 1827, [Carl Friedrich Gauss](https://en.wikipedia.org/wiki/Carl_Friedrich_Gauss) phát hiện ra rằng [Gaussian curvature](https://en.wikipedia.org/wiki/Gaussian_curvature) của một mặt nhúng trong không gian 3 chiều chỉ phụ thuộc vào các phép đo cục bộ thực hiện bên trong mặt đó (first fundamental form). Kết quả này được gọi là **Theorema Egregium** ("định lý đáng chú ý" trong tiếng Latinh).
+
+Một ánh xạ bảo toàn các phép đo cục bộ của mặt được gọi là **local isometry**. Một tính chất của mặt gọi là **intrinsic** nếu được bảo toàn bởi các local isometries, và **extrinsic** nếu không. Theorema Egregium khẳng định rằng Gaussian curvature là tính chất intrinsic.
+
+Riemannian manifolds và độ cong của chúng được Bernhard Riemann giới thiệu không chặt chẽ năm 1854. Tuy nhiên, chúng chỉ được hình thức hóa muộn hơn nhiều — khái niệm nguyên thủy hơn là smooth manifold chỉ được định nghĩa tường minh lần đầu vào năm 1913 trong sách của [Hermann Weyl](https://en.wikipedia.org/wiki/Hermann_Weyl). [Élie Cartan](https://en.wikipedia.org/wiki/Élie_Cartan) giới thiệu Cartan connection. [Levi-Civita](https://en.wikipedia.org/wiki/Tullio_Levi-Civita) định nghĩa Levi-Civita connection. [Albert Einstein](https://en.wikipedia.org/wiki/Albert_Einstein) sử dụng lý thuyết [pseudo-Riemannian manifolds](https://en.wikipedia.org/wiki/Pseudo-Riemannian_manifold) để phát triển thuyết tương đối tổng quát — cụ thể, [Einstein field equations](https://en.wikipedia.org/wiki/Einstein_field_equations) là các ràng buộc về độ cong của không-thời gian, một pseudo-Riemannian manifold 4 chiều.
+
+---
+
+## Định nghĩa
+
+### Tangent spaces và inner products
+
+Cho $M$ là một smooth manifold. Với mỗi điểm $p \in M$, có một không gian vectơ liên kết $T_p M$ gọi là **tangent space** của $M$ tại $p$. Các vectơ trong $T_p M$ được xem là các vectơ tiếp xúc với $M$ tại $p$.
+
+Tuy nhiên, $T_p M$ không tự đến với một [tích trong](https://en.wikipedia.org/wiki/Inner_product) — một "thước đo" cho vectơ tiếp tuyến về độ dài và góc. Đây là sự thiếu sót quan trọng vì giải tích dạy rằng để tính độ dài của một đường cong, cần phải định nghĩa độ dài của các vectơ tiếp tuyến với đường cong đó. Một **Riemannian metric** đặt "thước đo" như vậy lên mỗi tangent space.
+
+### Riemannian metric
+
+Một **Riemannian metric** $g$ trên $M$ gán cho mỗi điểm $p \in M$ một [positive-definite symmetric bilinear form](https://en.wikipedia.org/wiki/Symmetric_bilinear_form) (tức là tích trong) $g_p : T_p M \times T_p M \to \mathbb{R}$ theo cách trơn. Điều này tạo ra một **chuẩn** (norm):
+
+$$\|v\|_p = \sqrt{g_p(v, v)}, \quad v \in T_p M$$
+
+Một smooth manifold $M$ được trang bị Riemannian metric $g$ là một **Riemannian manifold**, ký hiệu $(M, g)$. Riemannian metric là một trường hợp đặc biệt của [metric tensor](https://en.wikipedia.org/wiki/Metric_tensor).
+
+> **Lưu ý:** Riemannian metric không được nhầm lẫn với hàm khoảng cách của một metric space (cũng gọi là metric).
+
+### Biểu diễn tọa độ
+
+Nếu $(x^1, \ldots, x^n)$ là tọa độ địa phương trơn trên $M$, các vectơ:
+
+$$\frac{\partial}{\partial x^1}\bigg|_p, \ldots, \frac{\partial}{\partial x^n}\bigg|_p$$
+
+tạo thành một cơ sở của $T_p M$. Các **thành phần** của Riemannian metric tại mỗi điểm được định nghĩa bởi:
+
+$$g_{ij}(p) = g_p\!\left(\frac{\partial}{\partial x^i}\bigg|_p,\, \frac{\partial}{\partial x^j}\bigg|_p\right)$$
+
+Các hàm này được ghép thành một hàm có giá trị ma trận $n \times n$ trên $M$. Yêu cầu $g_p$ là tích trong positive-definite có nghĩa chính xác là ma trận $(g_{ij}(p))$ là một **ma trận symmetric positive-definite** tại $p$.
+
+Trong ngôn ngữ đại số tensor, Riemannian metric có thể được viết qua dual basis của cotangent bundle:
+
+$$g = \sum_{i,j} g_{ij}\, dx^i \otimes dx^j$$
+
+### Đẳng cấu giữa tangent bundle và cotangent bundle
+
+Tương tự cách tích trong trên không gian vectơ tạo ra đẳng cấu giữa không gian và không gian đối ngẫu, Riemannian metric tạo ra đẳng cấu bundle:
+
+$$g^\flat : TM \to T^*M, \qquad v \mapsto g(v, \cdot)$$
+
+là một đẳng cấu của smooth vector bundles từ tangent bundle đến cotangent bundle.
+
+---
+
+## Isometries
+
+Một **isometry** là một ánh xạ giữa các Riemannian manifolds bảo toàn toàn bộ cấu trúc Riemannian. Nếu hai Riemannian manifolds có isometry giữa chúng, chúng được gọi là **isometric** và được coi là cùng một manifold trong mục đích của Riemannian geometry.
+
+Cụ thể, nếu $(M, g)$ và $(\tilde{M}, \tilde{g})$ là hai Riemannian manifolds, một [diffeomorphism](https://en.wikipedia.org/wiki/Diffeomorphism) $f : M \to \tilde{M}$ được gọi là isometry nếu $f^* \tilde{g} = g$, tức là:
+
+$$\tilde{g}_{f(p)}\!\left(df_p(u),\, df_p(v)\right) = g_p(u, v)$$
+
+với mọi $p \in M$ và $u, v \in T_p M$. Ví dụ, tịnh tiến và phép quay đều là isometries từ không gian Euclid vào chính nó.
+
+Một smooth map $f$, không nhất thiết là diffeomorphism, được gọi là **local isometry** nếu mỗi điểm $p$ có lân cận mở sao cho $f$ hạn chế lên lân cận đó là isometry.
+
+---
+
+## Volume form và tích phân
+
+Một oriented $n$-dimensional Riemannian manifold có một **$n$-form** duy nhất gọi là **Riemannian volume form**, được bảo toàn bởi các isometry bảo hướng. Volume form tạo ra một độ đo trên $M$ cho phép tích phân các hàm đo được. Nếu $M$ compact, thể tích của $M$ là:
+
+$$\operatorname{Vol}(M) = \int_M d\operatorname{vol}_g$$
+
+---
+
+## Các ví dụ
+
+### Không gian Euclid
+
+Cho $(x^1, \ldots, x^n)$ là tọa độ chuẩn trên $\mathbb{R}^n$. **Euclidean metric** (chuẩn tắc) được cho bởi:
+
+$$g = (dx^1)^2 + \cdots + (dx^n)^2 = \sum_{i=1}^n (dx^i)^2$$
+
+hay tương đương bởi các thành phần:
+
+$$g_{ij} = \delta_{ij}$$
+
+trong đó $\delta_{ij}$ là [Kronecker delta](https://en.wikipedia.org/wiki/Kronecker_delta), tức ma trận đơn vị $I_n$. Riemannian manifold $(\mathbb{R}^n, g_{\text{Eucl}})$ được gọi là **không gian Euclid**.
+
+### Riemannian submanifolds
+
+Cho $(M, g)$ là Riemannian manifold và $S \hookrightarrow M$ là immersed hoặc embedded submanifold. **Pullback metric** $\iota^* g$ trên $S$ được định nghĩa bởi:
+
+$$(\iota^* g)_p(u, v) = g_{\iota(p)}\!\left(d\iota_p(u),\, d\iota_p(v)\right)$$
+
+và $S$ trở thành **Riemannian submanifold** của $M$.
+
+Các ví dụ:
+
+- **$n$-sphere**: $S^n = \{x \in \mathbb{R}^{n+1} : \|x\| = 1\}$ là embedded submanifold của $\mathbb{R}^{n+1}$. Metric cảm ứng được gọi là **round metric** hay standard metric.
+
+- **Ellipsoid**: Với các số thực $a_1, \ldots, a_{n+1} > 0$:
+$$E = \left\{(x^1, \ldots, x^{n+1}) \in \mathbb{R}^{n+1} : \sum_{i=1}^{n+1} \frac{(x^i)^2}{a_i^2} = 1\right\}$$
+là embedded submanifold của $\mathbb{R}^{n+1}$.
+
+- **Đồ thị hàm**: Nếu $f : U \to \mathbb{R}$ trơn thì đồ thị $\{(x, f(x)) : x \in U\}$ là embedded submanifold của $\mathbb{R}^{n+1}$.
+
+- **Covering spaces**: Nếu $M$ không simply connected, phủ toàn cục $\tilde{M} \to M$ tự động kế thừa Riemannian metric.
+
+### Product manifolds
+
+Cho $(M_1, g_1)$ và $(M_2, g_2)$ là hai Riemannian manifolds. **Product metric** trên $M_1 \times M_2$ được định nghĩa bởi:
+
+$$g\!\left((u_1, u_2),\, (v_1, v_2)\right) = g_1(u_1, v_1) + g_2(u_2, v_2)$$
+
+Trong tọa độ: nếu $(x^1, \ldots, x^m)$ là chart trên $M_1$ và $(y^1, \ldots, y^n)$ là chart trên $M_2$, thì biểu diễn block-diagonal của metric trên $M_1 \times M_2$ là:
+
+$$g = \begin{pmatrix} (g_1)_{ij} & 0 \\ 0 & (g_2)_{kl} \end{pmatrix}$$
+
+Ví dụ: **flat torus** $\mathbb{T}^n = S^1 \times \cdots \times S^1$ với round metric trên mỗi bản sao $S^1$.
+
+### Định lý: Mọi smooth manifold đều nhận Riemannian metric
+
+> **Định lý.** Mọi smooth manifold đều nhận (non-canonical) Riemannian metric.
+
+Chứng minh sử dụng [partition of unity](https://en.wikipedia.org/wiki/Partition_of_unity) và cần tính chất Hausdorff và paracompact của smooth manifolds. Một cách thay thế: nhúng $M \hookrightarrow \mathbb{R}^N$ bằng [Whitney embedding theorem](https://en.wikipedia.org/wiki/Whitney_embedding_theorem) và kéo metric Euclid về. [Nash embedding theorem](https://en.wikipedia.org/wiki/Nash_embedding_theorems) còn mạnh hơn: với mọi smooth Riemannian manifold $(M, g)$, tồn tại embedding $\iota : M \hookrightarrow \mathbb{R}^N$ sao cho $\iota^* g_{\text{Eucl}} = g$.
+
+---
+
+## Hàm độ dài Riemannian
+
+### Độ dài của đường cong
+
+Một **admissible curve** là đường cong piecewise smooth $\gamma : [a, b] \to M$ có vận tốc $\dot\gamma(t) \neq 0$ ở khắp nơi nó được định nghĩa. **Độ dài** của $\gamma$ được định nghĩa là:
+
+$$L(\gamma) = \int_a^b \|\dot\gamma(t)\|_{\gamma(t)}\, dt = \int_a^b \sqrt{g_{\gamma(t)}(\dot\gamma(t),\, \dot\gamma(t))}\, dt$$
+
+### Hàm khoảng cách Riemannian
+
+Với Riemannian manifold liên thông $(M, g)$, **hàm khoảng cách Riemannian** được định nghĩa là:
+
+$$d(p, q) = \inf\bigl\{L(\gamma) : \gamma \text{ là admissible curve từ } p \text{ đến } q\bigr\}$$
+
+> **Định lý.** $(M, d)$ là một metric space, và topology metric trên $M$ trùng với topology của $M$.
+
+**Đường kính** của metric space $(M, d)$ là:
+
+$$\operatorname{diam}(M) = \sup_{p, q \in M} d(p, q)$$
+
+---
+
+## Connections và đạo hàm hiệp biến
+
+### Affine connection
+
+Một **(affine) connection** là cấu trúc bổ sung trên Riemannian manifold định nghĩa phép vi phân của vector field này theo vector field kia. Cho $\mathfrak{X}(M)$ ký hiệu không gian các vector fields trên $M$. Một affine connection $\nabla$ trên $M$ là một ánh xạ song tuyến tính:
+
+$$\nabla : \mathfrak{X}(M) \times \mathfrak{X}(M) \to \mathfrak{X}(M), \quad (X, Y) \mapsto \nabla_X Y$$
+
+thỏa mãn:
+- **$C^\infty(M)$-linearity theo $X$:** $\nabla_{fX} Y = f \nabla_X Y$ với mọi $f \in C^\infty(M)$
+- **Quy tắc Leibniz theo $Y$:** $\nabla_X(fY) = (Xf)Y + f\nabla_X Y$
+
+Biểu thức $\nabla_X Y$ gọi là **covariant derivative** của $Y$ theo $X$.
+
+### Levi-Civita connection
+
+Một connection được gọi là **bảo toàn metric** nếu:
+
+$$X\bigl(g(Y, Z)\bigr) = g(\nabla_X Y, Z) + g(Y, \nabla_X Z)$$
+
+Một connection là **torsion-free** nếu:
+
+$$\nabla_X Y - \nabla_Y X = [X, Y]$$
+
+trong đó $[X, Y]$ là [Lie bracket](https://en.wikipedia.org/wiki/Lie_bracket_of_vector_fields) của vector fields.
+
+Một **Levi-Civita connection** là connection torsion-free bảo toàn metric. Khi Riemannian metric được cố định, tồn tại duy nhất một Levi-Civita connection. Trong tọa độ địa phương, các **Christoffel symbols** $\Gamma^k_{ij}$ xác định Levi-Civita connection:
+
+$$\nabla_{\partial_i} \partial_j = \sum_k \Gamma^k_{ij}\, \partial_k$$
+
+$$\Gamma^k_{ij} = \frac{1}{2} \sum_l g^{kl}\!\left(\partial_i g_{jl} + \partial_j g_{il} - \partial_l g_{ij}\right)$$
+
+trong đó $(g^{kl})$ là nghịch đảo của ma trận $(g_{kl})$.
+
+---
+
+## Geodesics
+
+### Định nghĩa
+
+**Geodesics** là các đường cong không có gia tốc nội tại. Tương đương, geodesics là các đường cong có đường ngắn nhất cục bộ giữa hai điểm — tổng quát hóa đường thẳng trong không gian Euclid.
+
+Cố định connection $\nabla$ trên $M$. Cho $\gamma : I \to M$ là smooth curve. **Gia tốc** của $\gamma$ là vector field $\frac{D\dot\gamma}{dt}$ dọc theo $\gamma$. Nếu:
+
+$$\frac{D\dot\gamma}{dt} = 0 \quad \forall t \in I$$
+
+thì $\gamma$ gọi là **geodesic**. Trong tọa độ địa phương, điều kiện này trở thành hệ ODE:
+
+$$\ddot\gamma^k(t) + \sum_{i,j} \Gamma^k_{ij}(\gamma(t))\,\dot\gamma^i(t)\,\dot\gamma^j(t) = 0, \quad k = 1, \ldots, n$$
+
+Với mỗi $p \in M$ và $v \in T_p M$, tồn tại geodesic $\gamma$ xác định trên một khoảng mở chứa $0$ sao cho $\gamma(0) = p$ và $\dot\gamma(0) = v$. Mọi hai geodesic như vậy đều nhất trí trên miền chung.
+
+### Ví dụ
+
+- Các geodesic tối đại không hằng của **mặt phẳng Euclid** $\mathbb{R}^2$ chính xác là các đường thẳng.
+- Các geodesic tối đại không hằng của $S^2$ với round metric chính xác là các **đường tròn lớn** (great circles). Điều này có nghĩa là đường đi ngắn nhất giữa hai điểm trên Trái đất (xấp xỉ mặt cầu) là một cung đường tròn lớn.
+
+### Geodesic completeness và Hopf–Rinow theorem
+
+Riemannian manifold $(M, g)$ với Levi-Civita connection là **geodesically complete** nếu miền xác định của mọi geodesic tối đại là $\mathbb{R}$.
+
+> **Định lý Hopf–Rinow.** Cho $(M, g)$ là Riemannian manifold liên thông. Các điều kiện sau tương đương:
+> 1. Metric space $(M, d)$ là [complete](https://en.wikipedia.org/wiki/Complete_metric_space) (mọi Cauchy sequence hội tụ)
+> 2. Mọi tập đóng bounded trong $M$ đều compact
+> 3. $M$ là geodesically complete
+
+---
+
+## Parallel transport
+
+**Parallel transport** là cách di chuyển vectơ từ tangent space này sang tangent space khác dọc theo đường cong trong Riemannian manifold tổng quát. Với connection cố định, có một cách duy nhất để thực hiện parallel transport.
+
+Cụ thể, một smooth vector field $V$ dọc theo smooth curve $\gamma$ gọi là **parallel along** $\gamma$ nếu:
+
+$$\frac{DV}{dt} = 0 \quad \text{identically}$$
+
+Để parallel transport vectơ $v \in T_{\gamma(a)} M$ đến $T_{\gamma(b)} M$ dọc theo $\gamma$: kéo dài $v$ thành vector field parallel dọc $\gamma$, sau đó lấy giá trị tại $\gamma(b)$.
+
+---
+
+## Độ cong
+
+### Riemann curvature tensor
+
+**Riemann curvature tensor** đo chính xác mức độ mà việc parallel transport vectơ quanh một hình chữ nhật nhỏ không phải là identity map. Riemann curvature tensor bằng 0 tại mọi điểm khi và chỉ khi manifold locally isometric với không gian Euclid.
+
+Cố định connection $\nabla$. **Riemann curvature tensor** là ánh xạ:
+
+$$R : \mathfrak{X}(M)^3 \to \mathfrak{X}(M)$$
+
+định nghĩa bởi:
+
+$$R(X, Y)Z = \nabla_X \nabla_Y Z - \nabla_Y \nabla_X Z - \nabla_{[X,Y]} Z$$
+
+trong đó $[X, Y]$ là Lie bracket. $R$ là một $(1,3)$-tensor field.
+
+Trong tọa độ địa phương, các thành phần:
+
+$$R^l{}_{kij} = \partial_i \Gamma^l_{jk} - \partial_j \Gamma^l_{ik} + \sum_m \left(\Gamma^l_{im}\Gamma^m_{jk} - \Gamma^l_{jm}\Gamma^m_{ik}\right)$$
+
+### Ricci curvature tensor
+
+**Ricci curvature tensor** là:
+
+$$\operatorname{Ric}(X, Y) = \operatorname{tr}\!\bigl(Z \mapsto R(Z, X)Y\bigr)$$
+
+trong đó $\operatorname{tr}$ là trace. Ricci curvature tensor là covariant 2-tensor field.
+
+Trong tọa độ:
+
+$$R_{jk} = \sum_i R^i{}_{jik}$$
+
+**Scalar curvature** là trace của Ricci tensor:
+
+$$S = \sum_{j,k} g^{jk} R_{jk}$$
+
+### Einstein manifolds
+
+Một (pseudo-)Riemannian metric được gọi là **Einstein metric** nếu **Einstein's equation** thỏa mãn:
+
+$$\operatorname{Ric} = \lambda\, g$$
+
+với hằng số $\lambda$ nào đó. Riemannian manifold có metric Einstein gọi là **Einstein manifold**. Ví dụ của Einstein manifolds: không gian Euclid, $n$-sphere, không gian hyperbolic, và [complex projective space](https://en.wikipedia.org/wiki/Complex_projective_space) với Fubini-Study metric.
+
+### Manifolds có độ cong không đổi
+
+Một Riemannian manifold được gọi là có **độ cong không đổi** $\kappa$ nếu mọi [sectional curvature](https://en.wikipedia.org/wiki/Sectional_curvature) đều bằng $\kappa$. Điều này tương đương với điều kiện rằng, trong bất kỳ coordinate chart nào, Riemann curvature tensor có thể biểu diễn qua metric tensor:
+
+$$R_{ijkl} = \kappa\,(g_{ik} g_{jl} - g_{il} g_{jk})$$
+
+Điều này ngụ ý:
+
+$$R_{jk} = (n-1)\kappa\, g_{jk}, \qquad S = n(n-1)\kappa$$
+
+trong đó $n$ là chiều của manifold. Đặc biệt, mọi Riemannian manifold có độ cong không đổi là Einstein manifold.
+
+Như Bernhard Riemann tìm ra trong bài giảng 1854 của ông, Riemannian metric được định nghĩa cục bộ bởi:
+
+$$g = \frac{\displaystyle\sum_{i=1}^n (dx^i)^2}{\displaystyle\left(1 + \frac{\kappa}{4}\sum_{i=1}^n (x^i)^2\right)^2}$$
+
+có độ cong không đổi $\kappa$. Bất kỳ hai Riemannian manifolds nào có cùng độ cong không đổi đều locally isometric.
+
+---
+
+## Riemannian Space Forms
+
+Một **Riemannian space form** là Riemannian manifold có độ cong không đổi, liên thông, và geodesically complete. Phân loại:
+
+| Loại | Điều kiện | Ví dụ |
+|------|-----------|-------|
+| Spherical space form | $\kappa > 0$ | $S^n$ với standard metric ($\kappa = 1$) |
+| Euclidean space form | $\kappa = 0$ | $\mathbb{R}^n$ với Euclidean metric |
+| Hyperbolic space form | $\kappa < 0$ | Hyperbolic space $\mathbb{H}^n$ ($\kappa = -1$) |
+
+**Killing–Hopf theorem:** Mọi simply connected spherical space form đồng cấu với $S^n$, mọi simply connected Euclidean space form đồng cấu với $\mathbb{R}^n$, và mọi simply connected hyperbolic space form đồng cấu với $\mathbb{H}^n$.
+
+Sử dụng covering manifold construction, mọi Riemannian space form isometric với quotient manifold $\tilde{M}/\Gamma$ của một simply connected Riemannian space form $\tilde{M}$, theo group action của nhóm isometries $\Gamma$.
+
+---
+
+## Lie groups với Riemannian metrics
+
+Cho $G$ là [Lie group](https://en.wikipedia.org/wiki/Lie_group), chẳng hạn nhóm phép quay trong không gian ba chiều. Sử dụng cấu trúc nhóm, bất kỳ tích trong $g_e$ nào trên tangent space tại đơn vị có thể được vận chuyển đến mọi tangent space khác. Với $L_x : G \to G$ là left multiplication $y \mapsto xy$, tích trong tại điểm $p$ tùy ý được định nghĩa bởi:
+
+$$g_p(u, v) = g_e\!\left(d(L_{p^{-1}})_p\, u,\; d(L_{p^{-1}})_p\, v\right)$$
+
+Các Riemannian metrics xây dựng theo cách này gọi là **left-invariant**. Tương tự, **right-invariant** metrics được xây dựng dùng right multiplication. Metrics vừa left- vừa right-invariant gọi là **bi-invariant**.
+
+Mọi Lie group nhận bi-invariant Riemannian metric khi và chỉ khi nó là tích của một compact Lie group với một abelian Lie group.
+
+---
+
+## Homogeneous và Symmetric Spaces
+
+### Homogeneous manifolds
+
+Riemannian manifold $(M, g)$ gọi là **homogeneous** nếu với mọi cặp điểm $x, y \in M$, tồn tại isometry $f$ của manifold đưa $x$ đến $y$. Điều này tương đương với tính transitive của action tự nhiên của nhóm isometry. Mọi homogeneous Riemannian manifold là geodesically complete và có constant scalar curvature.
+
+### Symmetric spaces
+
+Riemannian manifold liên thông $(M, g)$ gọi là **symmetric** nếu với mọi điểm $p \in M$, tồn tại isometry của manifold với $p$ là fixed point và có vi phân tại $p$ là $-\text{id}$. Mọi Riemannian symmetric space là homogeneous, và do đó geodesically complete và có constant scalar curvature. Ngoài ra, **Riemann curvature tensor** và **Ricci curvature** đều là parallel — tức là covariantly constant.
+
+Élie Cartan chứng minh vào những năm 1920s rằng một locally symmetric Riemannian manifold geodesically complete và simply-connected thực sự là symmetric.
+
+Cartan đạt được phân loại tường minh của symmetric spaces irreducible. Mọi không gian như vậy là Einstein manifold. Marcel Berger tìm ra vào những năm 1950s rằng mọi Riemannian manifold simply connected và irreducible là symmetric space hoặc có Riemannian holonomy thuộc về một danh sách chỉ bảy khả năng.
+
+---
+
+## Infinite-dimensional Riemannian manifolds
+
+Các định lý trên dành cho finite-dimensional manifolds — manifolds có charts ánh xạ đến tập mở của $\mathbb{R}^n$. Chúng có thể được mở rộng ở mức độ nhất định đến infinite-dimensional manifolds, mô hình hóa theo topological vector space như Fréchet, Banach, và Hilbert manifolds.
+
+Riemannian metrics được định nghĩa tương tự, nhưng có sự phân biệt giữa hai loại:
+
+- **Weak Riemannian metric** trên $M$: hàm trơn $g$ sao cho với mọi $p$, hạn chế $g_p$ là tích trong trên $T_p M$.
+
+- **Strong Riemannian metric** trên $M$: weak Riemannian metric sao cho $g_p$ tạo ra topology trên $T_p M$. Nếu $g$ là strong Riemannian metric, $M$ phải là Hilbert manifold.
+
+**Ví dụ:** Nếu $\mathcal{H}$ là Hilbert space, với mọi $p$ ta có thể đồng nhất $T_p \mathcal{H} \cong \mathcal{H}$. Metric $g_p(u, v) = \langle u, v\rangle_{\mathcal{H}}$ với mọi $p$ là strong Riemannian metric.
+
+**Ví dụ khác:** Cho $M$ là compact Riemannian manifold và $\text{Diff}(M)$ là nhóm diffeomorphism của nó (là Lie group). Tangent bundle tại đơn vị là tập các smooth vector fields trên $M$. Cho $\mu$ là volume form trên $M$. Weak Riemannian metric trên $\text{Diff}(M)$ được định nghĩa bởi:
+
+$$G_\eta(X, Y) = \int_M g_{\eta(x)}\!\left(X(\eta(x)),\, Y(\eta(x))\right) d\mu(x)$$
+
+với $\eta \in \text{Diff}(M)$ và $X, Y \in T_\eta \text{Diff}(M)$.
+
+Hàm khoảng cách Riemannian $d(p, q)$ (geodesic distance) luôn là **pseudometric** nhưng có thể không là metric. Nếu $g$ là strong Riemannian metric thì $d$ phân tách các điểm và tạo ra topology ban đầu. Nếu $g$ là weak Riemannian metric, $d$ có thể thất bại trong việc phân tách điểm; thậm chí có thể đồng nhất bằng 0 — ví dụ, weak Riemannian metric trên $\text{Diff}(M)$ tạo ra geodesic distance triệt tiêu.
+
+**Định lý (Hopf–Rinow cho strong metrics):** Cho $(M, g)$ là strong Riemannian manifold. Khi đó metric completeness ngụ ý geodesic completeness.
+
+---
+
+## Xem thêm
+
+- [Riemannian geometry](https://en.wikipedia.org/wiki/Riemannian_geometry)
+- [Pseudo-Riemannian manifold](https://en.wikipedia.org/wiki/Pseudo-Riemannian_manifold)
+- [Finsler manifold](https://en.wikipedia.org/wiki/Finsler_manifold)
+- [Sub-Riemannian manifold](https://en.wikipedia.org/wiki/Sub-Riemannian_manifold)
+- [Levi-Civita connection](https://en.wikipedia.org/wiki/Levi-Civita_connection)
+- [Riemann curvature tensor](https://en.wikipedia.org/wiki/Riemann_curvature_tensor)
+- [Sectional curvature](https://en.wikipedia.org/wiki/Sectional_curvature)
+- [Geodesic](https://en.wikipedia.org/wiki/Geodesic)
+- [Hopf–Rinow theorem](https://en.wikipedia.org/wiki/Hopf%E2%80%93Rinow_theorem)
+- [Symmetric space](https://en.wikipedia.org/wiki/Symmetric_space)
+
+---
+
+## Tài liệu tham khảo
+
+1. do Carmo, M. P. (1992). *Riemannian Geometry*. Birkhäuser.
+2. Lee, J. M. (2018). *Introduction to Riemannian Manifolds* (2nd ed.). Springer.
+3. Petersen, P. (2016). *Riemannian Geometry* (3rd ed.). Springer.
+4. Cheeger, J.; Ebin, D. G. (2008). *Comparison Theorems in Riemannian Geometry*. AMS Chelsea.
+5. Kobayashi, S.; Nomizu, K. (1963). *Foundations of Differential Geometry*, Vol. I. Wiley.
+6. Besse, A. L. (1987). *Einstein Manifolds*. Springer.
+7. Wolf, J. A. (2011). *Spaces of Constant Curvature* (6th ed.). AMS Chelsea.
+8. Milnor, J. (1976). "Curvatures of Left Invariant Metrics on Lie Groups." *Advances in Mathematics* 21: 293–329.
+9. Michor, P.; Mumford, D. (2005). "Vanishing geodesic distance on spaces of submanifolds and diffeomorphisms." *Documenta Mathematica* 10: 217–245.
+10. Magnani, V.; Tiberio, D. (2020). "A remark on vanishing geodesic distances in infinite dimensions." *Proceedings of the AMS* 148: 3653–3656.
