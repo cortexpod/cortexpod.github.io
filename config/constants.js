@@ -74,7 +74,7 @@ export const DEFAULTTHEME = {
     // head: function useHead() {
     //     const { frontMatter, title: pageTitle } = useConfig()
 
-    //     const title = `${pageTitle} – openhuman`
+    //     const title = `${pageTitle} - openhuman`
     //     const { description, canonical, image } = frontMatter
     //     return (
     //         <>
