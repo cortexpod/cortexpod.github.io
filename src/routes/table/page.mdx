@@ -41,7 +41,7 @@ Disaggregated inference solves the prefill/decode efficiency split for a **singl
 | ----------------------------- | ---------------------------------------- | -------------------------------- |
 | Prefill/decode disaggregation | ✅ Hardware-separated                    | ✅ Handled in unified fabric     |
 | Concurrent agent contexts     | ~8–16 (software scheduled)               | **256 (hardware context slots)** |
-| Inter-agent KV handoff        | 50ms+ (cross-system software routing)    | **<2ms (CMFC silicon)**          |
+| Inter-agent KV handoff        | 50ms+ (cross-system software routing)    | **&lt;2ms (CMFC silicon)**          |
 | Shared document KV cache      | ❌ Not supported natively                | **✅ Hardware shared read bus**  |
 | Per-agent SLA enforcement     | Software queue (Dynamo scheduler)        | **Hardware SLA arbiter**         |
 | Infrastructure complexity     | 2 chip architectures + orchestration OS  | **Single chip, single fabric**   |

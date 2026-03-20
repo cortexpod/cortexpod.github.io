@@ -4,11 +4,6 @@ import { Tree, Folder, File } from "@/mdxui/file-tree"
 
 # CortexPod: A Silicon-First Platform for Distributed Agent Inference
 
-**Document Type**: Engineering Strategy & Technical Architecture  
-**Audience**: Semiconductor-literate investors, AI company CTOs, senior chip architects  
-**Version**: 1.0 — March 2026  
-**Classification**: Confidential — Pre-disclosure
-
 ---
 
 ## Table of Contents
@@ -135,7 +130,7 @@ CortexChip's CMFC hardware scheduler:
 - Context switch implemented as a hardware state machine: saves Pod register file + SRAM slot state in 1.2ms average, loads next Pod state in 0.8ms
 - Total preemptive context switch: **&lt;2ms end-to-end**
 
-This 10–25x improvement in context switch latency is the primary reason CortexChip can support 256 concurrent Pods while maintaining <50ms TTFT for interactive SLA classes.
+This 10–25x improvement in context switch latency is the primary reason CortexChip can support 256 concurrent Pods while maintaining &lt;50ms TTFT for interactive SLA classes.
 
 ### 2d. Quantifying the Efficiency Gap
 
@@ -146,7 +141,7 @@ For a 256-agent inference workload, 70B W4A8 models, mixed interactive and batch
 | H100 cluster | 32× H100 | $960,000 | ~22,400W | ~$8,064 | ~70ms | ~8 active |
 | AWS Inferentia2 | ~48 inf2 units | ~$18/hr rental | Included | ~$13,000/mo | ~90ms | ~12 active |
 | A100 cluster | 40× A100 | $800,000–$1,200,000 | ~32,000W | ~$11,520 | ~90ms | ~8 active |
-| **CortexChip v1 (target)** | **1× chip** | **$3,000** | **~300W** | **~$108** | **<50ms** | **256 active** |
+| **CortexChip v1 (target)** | **1× chip** | **$3,000** | **~300W** | **~$108** | **&lt;50ms** | **256 active** |
 
 Notes on methodology: H100 pricing reflects current grey market/OEM rates (~$30K/chip). Power cost at $0.12/kWh, 24/7 operation. CortexChip v1 cost estimate is at volume production (500+ chips); early beta pricing will be higher. The 256 concurrent Pod figure for CortexChip is a hardware specification (256 CMFC priority lanes); the ~8 figure for H100 reflects practical VRAM limits for simultaneous weight loading at 70B model size.
 
@@ -199,7 +194,7 @@ The efficiency gap versus 5nm (approximately 2.4×) does not eliminate CortexChi
 │  │  ~25% die area  ← KEY DIFFERENTIATOR │  │  64 GB/s agg.  │ │
 │  │                                      │  │  HW coherency  │ │
 │  │  KV Cache Directory (256 Pod entries)│  │  protocol      │ │
-│  │  Context Handoff Engine (32KB/<2ms)  │  └─────────────────┘ │
+│  │  Context Handoff Engine (32KB/&lt;2ms)  │  └─────────────────┘ │
 │  │  256 HW Priority Scheduling Lanes    │                       │
 │  │  Shared KV Cache Coherency Protocol  │  ┌─────────────────┐ │
 │  │  Mesh Topology Routing Table         │  │  I/O & PCIe     │ │
@@ -265,7 +260,7 @@ Pod Directory Entry (256 total):
 └── State (3-bit): ACTIVE / READY / SUSPENDED / HANDOFF / EMPTY
 ```
 
-The KV Page Table is a hardware structure — not a software data structure managed by a CPU driver. The CMFC hardware directly translates Pod-local virtual KV addresses to physical GDDR7 addresses without CPU involvement. This is the critical property that enables <2ms context switching: there is no TLB shootdown, no OS page table walk, no driver interrupt.
+The KV Page Table is a hardware structure — not a software data structure managed by a CPU driver. The CMFC hardware directly translates Pod-local virtual KV addresses to physical GDDR7 addresses without CPU involvement. This is the critical property that enables &lt;2ms context switching: there is no TLB shootdown, no OS page table walk, no driver interrupt.
 
 **Shared KV Cache Mechanism**
 
@@ -285,10 +280,10 @@ When the Router Pod hands off a task to the Writer Pod, it may need to transfer 
 1. Router Pod issues `HANDOFF` instruction with destination Pod ID and context range (byte range within its SRAM slot or a list of KV page IDs).
 2. CMFC validates destination Pod is in READY or ACTIVE state and is a member of the same mesh.
 3. For SRAM transfers (≤2MB): CMFC copies directly between Pod SRAM slots using dedicated DMA channel. Bandwidth: 512MB/s between SRAM regions. 32KB transfer: ~62 microseconds.
-4. For GDDR7 KV page transfers: CMFC updates the destination Pod's page table to include source pages (shared reference, no copy). Pages exceeding Pod's page table capacity are evicted to GDDR7 and re-allocated. Effective transfer of 128KB KV context: <500 microseconds (primarily page table update, not data movement).
+4. For GDDR7 KV page transfers: CMFC updates the destination Pod's page table to include source pages (shared reference, no copy). Pages exceeding Pod's page table capacity are evicted to GDDR7 and re-allocated. Effective transfer of 128KB KV context: &lt;500 microseconds (primarily page table update, not data movement).
 5. CMFC sets destination Pod state to ACTIVE and marks it schedulable on its priority lane.
 
-**Total context handoff latency (including scheduling overhead)**: target <2ms for transfers up to 32KB SRAM context; <5ms for 512KB KV page rebalancing.
+**Total context handoff latency (including scheduling overhead)**: target &lt;2ms for transfers up to 32KB SRAM context; &lt;5ms for 512KB KV page rebalancing.
 
 **Priority Scheduling Hardware**
 
@@ -300,7 +295,7 @@ The 256 hardware priority lanes are implemented as a priority queue in the CMFC.
 
 The CMFC scheduler runs at 1GHz and selects the highest-priority schedulable Pod on each TCA execution slot. Preemption is cooperative at the token level: a low-priority Pod completes its current decode step (average 2–5ms for a 70B model token), then yields to a higher-priority Pod. This is materially different from CUDA's non-preemptive stream model, where a long prefill operation cannot be interrupted.
 
-For the interactive SLA class (TTFT <50ms), the scheduler guarantees preemption within 5ms — the maximum decode step duration at target batch sizes. Combined with the <2ms context switch, the worst-case scheduling latency for an interactive Pod arriving while the TCA is executing a batch Pod is: 5ms (preemption wait) + 2ms (context switch) = 7ms, leaving 43ms budget for actual prefill computation.
+For the interactive SLA class (TTFT &lt;50ms), the scheduler guarantees preemption within 5ms — the maximum decode step duration at target batch sizes. Combined with the &lt;2ms context switch, the worst-case scheduling latency for an interactive Pod arriving while the TCA is executing a batch Pod is: 5ms (preemption wait) + 2ms (context switch) = 7ms, leaving 43ms budget for actual prefill computation.
 
 ### 3d. Memory Subsystem
 
@@ -324,7 +319,7 @@ FOPLP (Fan-Out Panel Level Packaging) through ASE Group is the alternative. FOPL
 For 70B W4A8 inference, the memory bandwidth math:
 
 - 70B model weight: 35GB at W4A8
-- For TTFT <50ms at batch=1: need to load all weights within 50ms = ~700GB/s effective throughput
+- For TTFT &lt;50ms at batch=1: need to load all weights within 50ms = ~700GB/s effective throughput
 - CortexChip GDDR7 aggregate bandwidth: ~1.8 TB/s (controller overhead ~15% → effective ~1.5 TB/s)
 - Margin: 1.5 TB/s / 0.7 TB/s needed = **2.1× margin**
 
@@ -447,13 +442,13 @@ The FPGA phase is not a performance benchmark — FPGAs are 5–10× slower than
 | Criterion | Target | Rationale |
 |-----------|--------|-----------|
 | Concurrent Pod capacity | 16 Pods on FPGA | Validates CMFC directory scaling |
-| Context switch latency | <10ms on FPGA | 5× silicon target; confirms design correctness |
+| Context switch latency | &lt;10ms on FPGA | 5× silicon target; confirms design correctness |
 | W4A8 kernel efficiency | >80% theoretical peak | Confirms systolic array design |
 | Memory bandwidth utilization | >70% HBM theoretical | Confirms access pattern assumptions |
 | KV coherency errors | 0 per 10,000 operations | Confirms correctness of sharing protocol |
-| 13B W4A8 TTFT | <250ms on FPGA | Bandwidth-scaled projection to silicon: <50ms |
+| 13B W4A8 TTFT | &lt;250ms on FPGA | Bandwidth-scaled projection to silicon: &lt;50ms |
 
-**Kill criterion**: If W4A8 TTFT for a 13B model exceeds 500ms on FPGA, the memory subsystem design requires fundamental revision before proceeding to silicon. At 5× FPGA-to-silicon scaling, 500ms on FPGA projects to >100ms on silicon for a 13B model — and 70B TTFT would exceed the <50ms target even with perfect bandwidth utilization. This is a hard stop.
+**Kill criterion**: If W4A8 TTFT for a 13B model exceeds 500ms on FPGA, the memory subsystem design requires fundamental revision before proceeding to silicon. At 5× FPGA-to-silicon scaling, 500ms on FPGA projects to >100ms on silicon for a 13B model — and 70B TTFT would exceed the &lt;50ms target even with perfect bandwidth utilization. This is a hard stop.
 
 **Team required**: 3 RTL engineers (CMFC implementation), 2 ML kernel engineers (W4A8 CUDA/HLS kernels), 1 systems architect (cluster topology, test framework)
 
@@ -527,9 +522,9 @@ Potential node migration to Samsung SF8 is evaluated at M24 based on: foundry ec
 
 The deployment platform is a pre-warmed serverless pool running on GPU hardware in Phase 1 (Month 0–12) and migrating to CortexChip hardware in Phase 2 (Month 12+). Its architecture:
 
-**Tiered capacity model**: Hot tier (model pre-loaded, <100ms cold start), warm tier (model on NVMe SSD, ~2s startup), cold tier (pull from object store, ~30s). Request routing dispatches based on SLA class.
+**Tiered capacity model**: Hot tier (model pre-loaded, &lt;100ms cold start), warm tier (model on NVMe SSD, ~2s startup), cold tier (pull from object store, ~30s). Request routing dispatches based on SLA class.
 
-**LoRA hot-swap**: The 512KB LoRA adapter slot in each Pod's SRAM enables adapter swap in <100ms — the base 70B model remains loaded in GDDR7 continuously. Customer-specific model personas are implemented as LoRA adapters, not full model deployments.
+**LoRA hot-swap**: The 512KB LoRA adapter slot in each Pod's SRAM enables adapter swap in &lt;100ms — the base 70B model remains loaded in GDDR7 continuously. Customer-specific model personas are implemented as LoRA adapters, not full model deployments.
 
 **Disaggregated prefill/decode**: Prefill pool (compute-optimized) handles input processing; decode pool (CMFC-optimized) handles token generation. KV cache transferred via CXL fabric.
 
@@ -652,7 +647,7 @@ The flywheel: more customers → more workload diversity → better chip optimiz
 
 ### 5d. GPU Phase → CortexChip Migration
 
-Customers onboard during Month 0–12 on vLLM-backed GPU infrastructure. The software Pod scheduling daemon emulates CMFC behavior — Pod context switching takes 20–50ms in software instead of <2ms in hardware, shared KV cache is implemented via Redis-backed memory pool instead of hardware directory, LoRA hot-swap takes 300–500ms instead of <100ms.
+Customers onboard during Month 0–12 on vLLM-backed GPU infrastructure. The software Pod scheduling daemon emulates CMFC behavior — Pod context switching takes 20–50ms in software instead of &lt;2ms in hardware, shared KV cache is implemented via Redis-backed memory pool instead of hardware directory, LoRA hot-swap takes 300–500ms instead of &lt;100ms.
 
 When CortexChip v1 ships (Month 17–18), migration is transparent to customers:
 
@@ -669,7 +664,7 @@ Customers see better performance without code changes. This is the adoption stra
 
 ### 6a. Unit Economics Comparison
 
-**Scenario**: Serving a 256-agent mesh, 70B W4A8 models, 10,000 requests/day, interactive SLA (TTFT <50ms). Assumes 16-hour peak utilization, 8-hour off-peak.
+**Scenario**: Serving a 256-agent mesh, 70B W4A8 models, 10,000 requests/day, interactive SLA (TTFT &lt;50ms). Assumes 16-hour peak utilization, 8-hour off-peak.
 
 **Infrastructure assumptions**:
 - Average request: 512 input tokens, 256 output tokens
@@ -726,14 +721,14 @@ A CortexChip deployment in Singapore, Ho Chi Minh City, and Mumbai is not merely
 **Growth tier** (Phase 2, CortexChip hardware):
 - Reserved Pod-hours per month, 30% discount versus developer tier
 - Pricing: ~$4.00/1M effective tokens (bundled, SLA-backed)
-- Interactive SLA guarantee (TTFT <50ms, p95)
+- Interactive SLA guarantee (TTFT &lt;50ms, p95)
 - CortexChip hardware, data residency within contracted region
 - 90-day minimum commitment
 
 **Enterprise tier** (Phase 2, dedicated allocation):
 - Dedicated CortexChip allocation (minimum 1 full chip = 256 Pods)
 - Fixed monthly fee: $8,000–$15,000/month per chip depending on SLA tier
-- SLA: TTFT <50ms (p99), 99.9% uptime, 4-hour hardware replacement SLA
+- SLA: TTFT &lt;50ms (p99), 99.9% uptime, 4-hour hardware replacement SLA
 - Data residency commitment with audit logs
 - Integration with customer's private model weights and LoRA adapters
 - Dedicated account engineering support
@@ -748,7 +743,7 @@ Mechanisms that improve with usage:
 
 2. **Quantization calibration**: The hardware calibration assist (Section 3e) provides per-layer activation statistics from live inference. After 90 days, the quantization optimizer has real activation distributions for the customer's specific input distribution — not generic calibration data. Model accuracy at the same quantization level improves by 0.5–1.5 MMLU points.
 
-3. **LoRA adapter caching**: Frequently-used LoRA adapters are pinned in the Pod SRAM hot slot, eliminating the <100ms swap overhead. After 30 days, the system has learned which adapters to pin.
+3. **LoRA adapter caching**: Frequently-used LoRA adapters are pinned in the Pod SRAM hot slot, eliminating the &lt;100ms swap overhead. After 30 days, the system has learned which adapters to pin.
 
 **Estimated effective cost reduction**: 15–25% reduction in cost/token after 90 days of stable usage, driven primarily by KV cache hit rate improvement. This is not discounting — it is genuine efficiency improvement that reduces infrastructure cost.
 
@@ -765,7 +760,7 @@ Mechanisms that improve with usage:
 
 **The math in detail**:
 
-70B W4A8 weight footprint: 35GB. To achieve TTFT <50ms at batch=1, the weight must be fully loaded through the memory hierarchy within 50ms (simplification: steady-state decode is less demanding than initial prefill, but prefill dominates TTFT). Minimum required effective bandwidth: 35GB / 0.050s = **700 GB/s**.
+70B W4A8 weight footprint: 35GB. To achieve TTFT &lt;50ms at batch=1, the weight must be fully loaded through the memory hierarchy within 50ms (simplification: steady-state decode is less demanding than initial prefill, but prefill dominates TTFT). Minimum required effective bandwidth: 35GB / 0.050s = **700 GB/s**.
 
 CortexChip GDDR7 theoretical: 1.8 TB/s. After memory controller overhead (15%), ECC overhead (2%), access pattern non-sequentiality for attention computation (10–20%), realistic effective bandwidth is approximately **1.2–1.4 TB/s**. Margin over 700 GB/s: 1.7–2.0×.
 
@@ -889,7 +884,7 @@ The FPGA phase proves:
 1. CMFC directory protocol correctness at 16-Pod scale
 2. KV cache sharing coherency under concurrent access
 3. W4A8 kernel efficiency on realistic attention workloads
-4. Context switch latency (targeting <10ms on FPGA)
+4. Context switch latency (targeting &lt;10ms on FPGA)
 
 **Hardware**: 4× dual-FPGA nodes (Xilinx Alveo U280 pairs). Each node emulates 4 Pods. Total: 16 concurrent Pods.
 
@@ -943,7 +938,7 @@ The FPGA phase proves:
 
 Note: $10M is tight for this scope. The difference ($2–3M) is covered by either a larger seed round or deferring the CXL IP license (implementing a basic PCIe interface instead of CXL 2.0 for the test chip).
 
-### Minimum Viable Test Chip (<$20M NRE)
+### Minimum Viable Test Chip (&lt;$20M NRE)
 
 If the full CortexChip v1 ($60–80M NRE) cannot be funded from Series A, there is a meaningful intermediate milestone: a **32-Pod CMFC test chip**.
 
@@ -967,9 +962,9 @@ Series B funding case: "We have silicon. The CMFC switches 32 Pod contexts in 1.
 
 ## 9. Killer Assumptions
 
-### Assumption 1: GDDR7 + 12nm provides sufficient bandwidth for 70B W4A8 inference at <50ms TTFT
+### Assumption 1: GDDR7 + 12nm provides sufficient bandwidth for 70B W4A8 inference at &lt;50ms TTFT
 
-**Precise statement**: A CortexChip at Samsung SF12 with 8× GDDR7 stacks via FOPLP packaging achieves ≥700 GB/s effective memory bandwidth for real 70B W4A8 attention workloads (including random-access KV cache reads), enabling TTFT <50ms at batch=1 for interactive requests.
+**Precise statement**: A CortexChip at Samsung SF12 with 8× GDDR7 stacks via FOPLP packaging achieves ≥700 GB/s effective memory bandwidth for real 70B W4A8 attention workloads (including random-access KV cache reads), enabling TTFT &lt;50ms at batch=1 for interactive requests.
 
 **Validation evidence that would confirm it**:
 - FPGA emulation (Month 3–5): measure effective bandwidth for real LLaMA-3 70B W4A8 attention workloads at 13B scale (bandwidth scales linearly with model size)
@@ -977,8 +972,8 @@ Series B funding case: "We have silicon. The CMFC switches 32 Pod contexts in 1.
 - Third-party benchmark: MLPerf Inference submission on CortexChip v1 for independent validation
 
 **Validation evidence that would deny it**:
-- FPGA emulation shows effective bandwidth <400 GB/s for 13B W4A8 workload (projects to <700 GB/s for 70B)
-- GDDR7 random-access bandwidth (for KV cache reads) is measured at <50% of sequential read bandwidth
+- FPGA emulation shows effective bandwidth &lt;400 GB/s for 13B W4A8 workload (projects to &lt;700 GB/s for 70B)
+- GDDR7 random-access bandwidth (for KV cache reads) is measured at &lt;50% of sequential read bandwidth
 
 **Fallback if it fails**:
 - Option A: Scope to ≤13B models — bandwidth requirement drops to ~130 GB/s, achievable with 2× GDDR7 stacks
