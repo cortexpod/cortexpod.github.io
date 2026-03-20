@@ -7,8 +7,8 @@ const menuItems = [
         href: "/",
     },
     {
-        title: "About",
-        href: "/about",
+        title: "Investor",
+        href: "/investor",
     },
     // {
     //     title: "BRDF",
@@ -19,24 +19,24 @@ const menuItems = [
         href: "/materials",
     },
     {
-        title: "Table",
-        href: "/table",
+        title: "Competitive",
+        href: "/competitive",
     },
     {
-        title: "Sample",
-        href: "/sample",
+        title: "Engineering",
+        href: "/engineering",
     },
     {
-        title: "Theme",
-        href: "/theme",
+        title: "Scripts",
+        href: "/scripts",
     },
     {
-        title: "Markdown",
-        href: "/markdown",
+        title: "Market",
+        href: "/market",
     },
     {
-        title: "Contact",
-        href: "/contact",
+        title: "Agent",
+        href: "/agent",
     },
 ]
 

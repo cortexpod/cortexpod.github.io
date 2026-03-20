@@ -1,0 +1,231 @@
+import { Callout } from "@/mdxui/callout"
+import { Steps } from "@/mdxui/steps"
+import { Tree, Folder, File } from "@/mdxui/file-tree"
+
+# Neural TTS at Scale: A Formal Research Analysis
+
+---
+
+## Part 1, Emergent Abilities in Audio/Speech LLMs
+
+### 1.1 Formal Definition of Emergence
+
+**Definition (Wei et al., 2022, adapted for speech):** A capability $\mathcal{E}$ is *emergent* in a speech model $\mathcal{M}_N$ if there exists a threshold $N^* $ such that:
+
+$$\mathcal{E}(\mathcal{M}_N) \approx 0 \quad \forall N < N^* \quad \text{and} \quad \mathcal{E}(\mathcal{M}_N) \gg 0 \quad \forall N \geq N^*$$
+
+where the transition is sharp (non-linear) with respect to model scale $N$, dataset size $D$, or compute $C$. For TTS specifically, relevant emergent capabilities include: zero-shot dialect transfer, cross-speaker prosody generalization, and spontaneous speech phenomena (disfluencies, breath modeling).
+
+### 1.2 Scaling Laws for Speech Tokens
+
+Standard Chinchilla (Hoffmann et al., 2022) gives the loss over text tokens as:
+
+$$L(N, D) = E + \frac{A}{N^\alpha} + \frac{B}{D^\beta}$$
+
+where $E$ is irreducible entropy, $A, B$ are fitted constants, and $\alpha \approx 0.34, \beta \approx 0.28$ for language. For **speech codec tokens** (e.g., EnCodec at 75 Hz, 8 codebooks), we need to adapt this. Audio tokens are *hierarchically structured*, coarse tokens (codebook 1) carry prosodic/speaker identity information; fine tokens (codebooks 2–8) carry acoustic detail. This hierarchy modifies the scaling exponents.
+
+**Proposition 1 (Speech Scaling Law):** For a codec language model operating on residual vector quantization (RVQ) tokens, the cross-entropy loss decomposes as:
+
+$$L_{\text{speech}}(N, D) = \underbrace{E_{\text{prosody}}}_{\text{irred.}} + \frac{A}{N^{\alpha_c}} + \frac{B}{D^{\beta_c}} + \gamma \cdot \mathcal{H}(\text{dialect})$$
+
+where:
+- $\alpha_c \approx 0.28$–$0.32$ (slightly lower than text, due to temporal redundancy in audio)
+- $\beta_c \approx 0.22$–$0.26$ (audio requires more data per parameter than text, an empirical finding from VALL-E and SoundStorm)
+- $\mathcal{H}(\text{dialect})$ is a dialect entropy penalty term: $\mathcal{H} = -\sum_d p_d \log p_d$ over dialect distribution $p_d$
+
+**Compute-optimal frontier (Chinchilla for speech):**
+
+Given a compute budget $C = 6ND$ (the standard FLOPs approximation for transformer training), the optimal allocation follows from minimizing $L(N,D)$ subject to $C = 6ND$:
+
+$$N^* = \left(\frac{A \cdot \alpha_c}{B \cdot \beta_c}\right)^{\frac{1}{\alpha_c + \beta_c}} \cdot \left(\frac{C}{6}\right)^{\frac{\beta_c}{\alpha_c + \beta_c}}$$
+
+$$D^* = \frac{C}{6 N^*}$$
+
+Using $\alpha_c = 0.30, \beta_c = 0.24$, this gives $D^* / N^* \approx 18$–$22$ tokens per parameter for speech, roughly **1.5× the Chinchilla text ratio**, reflecting higher per-token information density in audio.
+
+### 1.3 Emergence Thresholds for TTS
+
+Based on extrapolations from VALL-E (Wang et al., 2023, ~60K hours), SoundStorm (Borsos et al., 2023), and VoiceBox (Le et al., 2023):The three emergence regimes correspond to qualitatively different capability thresholds. Concretely:
+
+| Capability | $N^*$ | $D^*$ (hours) | $C^*$ (FLOPs) |
+|---|---|---|---|
+| Naturalness ≥ human MOS threshold | ~400M | ~20K hrs | ~$10^{21}$ |
+| Zero-shot dialect/speaker transfer | ~2B | ~60K hrs | ~$5 \times 10^{22}$ |
+| Spontaneous speech (breaths, fillers) | ~8B | ~150K hrs | ~$10^{24}$ |
+
+---
+
+## Part 2, Data, Compute & Architectural Requirements
+
+### 2.1 Minimum Data Requirements
+
+**Lemma 1 (Dialect Coverage):** For a language with $K$ dialects, each speaker having identity vector $\mathbf{s}_i \in \mathbb{R}^d$, covering the speaker manifold $\mathcal{S}$ to resolution $\epsilon$ requires:
+
+$$N_{\text{speakers}} \geq \left(\frac{\text{diam}(\mathcal{S})}{\epsilon}\right)^d \cdot K$$
+
+Empirically (from VALL-E ablations), $d \approx 64$ for a speaker encoder, requiring roughly **2,000–5,000 unique speakers per dialect** for adequate manifold coverage.
+
+For a single language with 5 regional dialects:
+- Minimum: **50,000 hours**, 15,000 speakers, 3,000 per dialect
+- Optimal (compute-matched to 3B parameter model): **120,000–200,000 hours**
+- Distribution: 60% clean studio speech, 25% semi-spontaneous, 15% conversational
+
+### 2.2 Architectural Choices
+
+Three dominant paradigms exist, each with distinct forward passes:
+
+**Architecture A: Codec Language Model (VALL-E style)**
+
+The forward pass factorizes over $T$ RVQ codebook levels. For codebook $c \in \{1, \ldots, C\}$ at time step $t$:
+
+$$p_\theta(\mathbf{A} \mid \mathbf{x}, \mathbf{e}_s) = \prod_{t=1}^T p_\theta(a_t^{(1)} \mid \mathbf{A}_{<t}, \mathbf{x}, \mathbf{e}_s) \prod_{c=2}^C p_\theta(a_t^{(c)} \mid \mathbf{A}_{<t}, a_t^{(<c)}, \mathbf{x}, \mathbf{e}_s)$$
+
+Training loss (autoregressive cross-entropy over codec tokens):
+
+$$\mathcal{L}_{\text{AR}} = -\mathbb{E}_{(\mathbf{x}, \mathbf{a}, \mathbf{e}_s) \sim \mathcal{D}} \left[ \sum_{t,c} \log p_\theta(a_t^{(c)} \mid \mathbf{A}_{<t}, a_t^{(<c)}, \mathbf{x}, \mathbf{e}_s) \right]$$
+
+**Architecture B: Flow Matching (VoiceBox / Matcha-TTS style)**
+
+Define a continuous-time normalizing flow over mel-spectrograms $\mathbf{m}$. The conditional vector field $u_t(\mathbf{m} \mid \mathbf{m}_1)$ interpolates between noise $\mathbf{m}_0 \sim \mathcal{N}(0, I)$ and target $\mathbf{m}_1$:
+
+$$u_t(\mathbf{m} \mid \mathbf{m}_1) = \frac{\mathbf{m}_1 - (1 - \sigma_{\min}) \mathbf{m}}{t}$$
+
+The flow matching loss with optimal transport conditioning:
+
+$$\mathcal{L}_{\text{FM}} = \mathbb{E}_{t, \mathbf{m}_0, \mathbf{m}_1} \left\| v_\psi(\mathbf{m}_t, t, \mathbf{x}, \mathbf{e}_s) - u_t(\mathbf{m} \mid \mathbf{m}_1) \right\|^2$$
+
+This has **lower training variance** than diffusion (which uses score matching) and enables faster inference with fewer NFE steps (typically 10–20 vs. 50–1000 for DDPM).
+
+**Architecture C: Diffusion (Grad-TTS / NaturalSpeech 2)**
+
+Score-matching objective over a forward process $q(\mathbf{m}_t | \mathbf{m}_0) = \mathcal{N}(\mathbf{m}_t; \sqrt{\bar{\alpha}_t}\mathbf{m}_0, (1-\bar{\alpha}_t)\mathbf{I})$:
+
+$$\mathcal{L}_{\text{diff}} = \mathbb{E}_{t, \boldsymbol{\epsilon}, \mathbf{m}_0} \left\| \boldsymbol{\epsilon} - \boldsymbol{\epsilon}_\psi(\mathbf{m}_t, t, \mathbf{x}, \mathbf{e}_s) \right\|^2$$
+
+**Recommendation:** For a dialect-diverse production system, a **hybrid architecture** is optimal: an autoregressive codec LM for the coarse token stream (capturing speaker/prosody/dialect) combined with a flow-matching upsampler (high-fidelity fine acoustic detail). This mirrors the Claude.ai / GPT-4o Voice approach.
+
+---
+
+## Part 3, RL-AIF for Hyper-Realistic TTS
+
+### 3.1 The TTS MDP
+
+**Definition (TTS Markov Decision Process):**
+
+$$\mathcal{M} = \langle \mathcal{S}, \mathcal{A}, \mathcal{R}, \mathcal{P}, \gamma \rangle$$
+
+- **State space** $s_t \in \mathcal{S}$: $s_t = (\mathbf{x}_{1:L}, \mathbf{a}_{1:t-1}, \mathbf{e}_s, c_t)$, the full context of input phonemes $\mathbf{x}$, previously generated codec tokens $\mathbf{a}_{<t}$, speaker embedding $\mathbf{e}_s$, and a prosodic context vector $c_t$ encoding rhythm phase
+
+- **Action space** $a_t \in \mathcal{A}$: discrete codec token from vocabulary $\mathcal{V}$, $|\mathcal{V}| = 1024$ per codebook level; in practice $\mathcal{A} = \mathcal{V}^C$ for $C$ codebook levels decoded jointly or autoregressively
+
+- **Reward** $r_t \in \mathcal{R}$: sparse terminal reward at end of utterance, $r_T = r_\phi(\mathbf{x}, \mathbf{a}_{1:T})$; zero otherwise
+
+- **Transition** $\mathcal{P}$: deterministic given policy, $s_{t+1} = s_t \cup \{a_t\}$
+
+- **Policy** $\pi_\theta(a_t | s_t)$: the pre-trained codec LM, parameterized by $\theta$
+
+### 3.2 Reward Model Formulation
+
+The reward model $r_\phi: \mathcal{X} \times \mathcal{A}^* \to \mathbb{R}$ scores complete utterances. We define a **composite reward**:
+
+$$r_\phi(\mathbf{x}, \mathbf{y}) = \lambda_1 r_{\text{nat}}(\mathbf{x}, \mathbf{y}) + \lambda_2 r_{\text{pros}}(\mathbf{x}, \mathbf{y}) + \lambda_3 r_{\text{spkr}}(\mathbf{y}, \mathbf{e}_s) + \lambda_4 r_{\text{phon}}(\mathbf{x}, \mathbf{y})$$
+
+where:
+
+**Naturalness reward** (learned from AI feedback comparisons):
+$$r_{\text{nat}}(\mathbf{x}, \mathbf{y}) = \sigma\left(\mathbf{w}_\phi^\top \text{Enc}_\phi(\mathbf{x}, \mathbf{y})\right)$$
+
+**Prosody reward** (pitch/rhythm alignment with reference exemplar $\mathbf{y}^*$):
+$$r_{\text{pros}}(\mathbf{x}, \mathbf{y}) = -\text{DTW}\left(F_0(\mathbf{y}), F_0(\mathbf{y}^*)\right) - \beta \cdot \left\| \text{Energy}(\mathbf{y}) - \text{Energy}(\mathbf{y}^*) \right\|_1$$
+
+**Speaker similarity** (using pretrained speaker encoder $E$):
+$$r_{\text{spkr}}(\mathbf{y}, \mathbf{e}_s) = \cos\left(E(\mathbf{y}), \mathbf{e}_s\right)$$
+
+**Phoneme alignment** (CTC-based or forced-alignment penalty):
+$$r_{\text{phon}}(\mathbf{x}, \mathbf{y}) = -\alpha_{\text{CTC}} \cdot \mathcal{L}_{\text{CTC}}(\mathbf{x} | \mathbf{y})$$
+
+The weights $\lambda_1 = 0.4, \lambda_2 = 0.3, \lambda_3 = 0.2, \lambda_4 = 0.1$ can be meta-learned or swept via grid search on a validation set.
+
+### 3.3 AI Feedback Collection
+
+The critical innovation is using a **Judge model** to generate preference labels at scale. For two speech samples $\mathbf{y}^+, \mathbf{y}^-$ conditioned on the same text $\mathbf{x}$:
+
+$$P(\mathbf{y}^+ \succ \mathbf{y}^- | \mathbf{x}) = \sigma(r_\phi(\mathbf{x}, \mathbf{y}^+) - r_\phi(\mathbf{x}, \mathbf{y}^-))$$
+
+The Judge can be a multimodal LLM (e.g., GPT-4o with audio input) prompted with a scoring rubric $\mathcal{Q}$:
+
+$$\mathcal{Q} = \{\text{"naturalness"}, \text{"prosody appropriateness"}, \text{"breath/pause placement"}, \text{"dialect fidelity"}, \text{"intelligibility"}\}$$
+
+**Bradley-Terry reward model loss** (as in InstructGPT, Ouyang et al. 2022):
+
+$$\mathcal{L}_{\text{RM}} = -\mathbb{E}_{(\mathbf{x}, \mathbf{y}^+, \mathbf{y}^-) \sim \mathcal{D}_{\text{pref}}} \left[ \log \sigma\left(r_\phi(\mathbf{x}, \mathbf{y}^+) - r_\phi(\mathbf{x}, \mathbf{y}^-)\right) \right]$$
+
+For Constitutional AI-style self-critique (Anthropic, 2022), add a self-evaluation term where the Judge critiques its own scores via chain-of-thought, reducing annotation noise.
+
+### 3.4 Policy Optimization
+
+**KL-regularized RLHF objective** (directly from InstructGPT, adapted for TTS):
+
+$$\mathcal{J}(\theta) = \mathbb{E}_{\mathbf{x} \sim \mathcal{D}, \mathbf{y} \sim \pi_\theta(\cdot|\mathbf{x})} \left[ r_\phi(\mathbf{x}, \mathbf{y}) \right] - \beta \cdot \text{KL}\left[\pi_\theta(\mathbf{y}|\mathbf{x}) \| \pi_{\text{ref}}(\mathbf{y}|\mathbf{x})\right]$$
+
+The KL term prevents reward hacking (e.g., the model collapsing to a single "safe" prosody pattern that maximizes reward but loses diversity). The reference policy $\pi_{\text{ref}}$ is the SFT-stage model.
+
+**PPO update (token-level):** Using the standard clipped surrogate with a value baseline $V_\xi(s_t)$:
+
+$$\mathcal{L}^{\text{PPO}}(\theta) = \mathbb{E}_t \left[ \min\left( \rho_t \hat{A}_t, \text{clip}(\rho_t, 1-\varepsilon, 1+\varepsilon) \hat{A}_t \right) \right]$$
+
+where $\rho_t = \frac{\pi_\theta(a_t|s_t)}{\pi_{\text{old}}(a_t|s_t)}$ and the advantage $\hat{A}_t$ is estimated with GAE:
+
+$$\hat{A}_t = \sum_{k=0}^{T-t} (\gamma \lambda)^k \delta_{t+k}, \quad \delta_t = r_t + \gamma V_\xi(s_{t+1}) - V_\xi(s_t)$$
+
+**Alternative: GRPO (Group Relative Policy Optimization, DeepSeek-R1 style)**
+
+For TTS, GRPO is particularly attractive because it avoids training a separate value network. Generate $G$ speech samples per text input, compute rewards, then use group-normalized advantages:
+
+$$\hat{A}_{i} = \frac{r_i - \text{mean}(\{r_j\}_{j=1}^G)}{\text{std}(\{r_j\}_{j=1}^G)}$$
+
+$$\mathcal{L}^{\text{GRPO}}(\theta) = -\frac{1}{G} \sum_{i=1}^G \min\left(\rho_i \hat{A}_i, \text{clip}(\rho_i, 1-\varepsilon, 1+\varepsilon) \hat{A}_i\right) + \beta \cdot \text{KL}[\pi_\theta \| \pi_{\text{ref}}]$$
+
+**DPO adaptation for speech:** Direct preference optimization (Rafailov et al., 2023) avoids the RL loop entirely. Given preference pairs $(\mathbf{y}^+, \mathbf{y}^-)$:
+
+$$\mathcal{L}^{\text{DPO}}(\theta) = -\mathbb{E} \left[ \log \sigma \left( \beta \log \frac{\pi_\theta(\mathbf{y}^+|\mathbf{x})}{\pi_{\text{ref}}(\mathbf{y}^+|\mathbf{x})} - \beta \log \frac{\pi_\theta(\mathbf{y}^-|\mathbf{x})}{\pi_{\text{ref}}(\mathbf{y}^-|\mathbf{x})} \right) \right]$$
+
+For TTS, DPO is computationally cheaper and more stable than full PPO, but GRPO likely achieves a better quality ceiling due to online exploration.
+
+---
+
+## Part 4, Full Deployment Architecture
+
+The four-stage pipeline, visualized:### 4.1 Inference-Time Compute Scaling
+
+A key insight from o1/DeepSeek-R1 research is that **test-time compute scaling** applies to TTS as well. At inference, given $N_{\text{samples}}$ parallel generations, the expected maximum reward scales approximately as:
+
+$$\mathbb{E}\left[\max_{i \leq N} r(\mathbf{y}_i)\right] \approx r_{\mu} + \sigma_r \cdot \Phi^{-1}\left(\frac{N}{N+1}\right)$$
+
+where $r_\mu, \sigma_r$ are the mean/std of the reward distribution and $\Phi^{-1}$ is the probit function. In practice, **Best-of-8 reranking** with the reward model $r_\phi$ provides ~0.3–0.5 MOS improvement with 8× inference cost, a favorable tradeoff for production latency budgets.
+
+Streaming inference uses the codec LM autoregressively at the coarse level (latency-sensitive path) while the acoustic decoder runs on completed segments in parallel.
+
+---
+
+## Research Roadmap---
+
+## Key Theorems and Propositions (Summary)
+
+**Theorem 1 (Compute-Optimal Speech Scaling):** For a codec LM with $\alpha_c = 0.30, \beta_c = 0.24$, the Chinchilla-optimal parameter count scales as $N^* \propto C^{0.44}$ and optimal token count as $D^* \propto C^{0.56}$, slightly more data-heavy than text LLMs, requiring roughly 20 speech tokens per parameter at optimality.
+
+**Theorem 2 (KL Prevents Reward Hacking):** Under the KL-regularized objective $\mathcal{J}(\theta)$, the optimal policy satisfies $\pi^*(\mathbf{y}|\mathbf{x}) \propto \pi_{\text{ref}}(\mathbf{y}|\mathbf{x}) \cdot \exp\left(r_\phi(\mathbf{x},\mathbf{y})/\beta\right)$. This is a Gibbs distribution, as $\beta \to 0$, the policy collapses to reward maximization (hacking risk); as $\beta \to \infty$, it recovers the reference (no improvement). The optimal $\beta$ lies in $[0.05, 0.3]$ empirically for TTS.
+
+**Proposition 2 (Best-of-N Scaling):** Test-time reranking with a reward model improves expected quality as $O(\log N)$. For $N = 8$ samples, the expected MOS improvement is approximately $+0.35$ for a well-calibrated $r_\phi$.
+
+---
+
+## Critical Research Risks
+
+Three areas deserve particular attention in your roadmap:
+
+The **reward model calibration problem** is the hardest engineering challenge. A misspecified $r_\phi$ that correlates poorly with human MOS will cause the RL stage to optimize a wrong objective, analogous to Goodhart's Law. Mitigating this requires diverse evaluation dimensions in $\mathcal{Q}$, regular human audits, and possibly a **Constitutional AI** critique-revision loop (Anthropic, 2022) where the Judge model refines its own rubric.
+
+The **dialect fairness problem** is specific to your multi-dialect setting. RL optimization under a single aggregate reward may cause the policy to sacrifice minority dialect quality for majority dialect gains. The fix is a **constrained MDP** formulation: maximize expected reward subject to per-dialect MOS constraints $r_d \geq \tau_d \; \forall d$, implemented via Lagrangian relaxation.
+
+The **temporal credit assignment problem** is fundamental to RL for sequence generation, a prosodic error at token $t=50$ affects the reward at $t=T$, but the gradient must propagate back through hundreds of codec token decisions. GRPO partially addresses this by treating the full sequence as a bandit action, but the loss surface remains highly non-convex at scale.

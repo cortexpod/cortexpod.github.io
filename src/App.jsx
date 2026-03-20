@@ -12,14 +12,14 @@ import { SidebarBottom } from "@/components/layout/sidebar-bottom"
 import Home from "./routes/home/page.mdx"
 import { Navbar } from "@/components/layout/navbar"
 import { TOC } from "@/components/layout/toc"
-const About = lazy(() => import("./routes/about/page.mdx"))
+const Investor = lazy(() => import("./routes/investor/page.mdx"))
 const BRDF = lazy(() => import("./routes/brdf/page.mdx"))
 const Materials = lazy(() => import("./routes/materials/page.mdx"))
-const Contact = lazy(() => import("./routes/contact/page.mdx"))
-const Markdown = lazy(() => import("./routes/markdown/page.mdx"))
-const Sample = lazy(() => import("./routes/sample/page.mdx"))
-const Table = lazy(() => import("./routes/table/page.mdx"))
-const Theme = lazy(() => import("./routes/theme/page.mdx"))
+const Market = lazy(() => import("./routes/market/page.mdx"))
+const Engineering = lazy(() => import("./routes/engineering/page.mdx"))
+const Competitive = lazy(() => import("./routes/competitive/page.mdx"))
+const Scripts = lazy(() => import("./routes/scripts/page.mdx"))
+const Agent = lazy(() => import("./routes/agent/page.mdx"))
 
 // import Home from "./routes/home/page.mdx"
 // import About from "./routes/about/page.mdx"
@@ -59,14 +59,14 @@ function App() {
                         <MdxProviderWrapper>
                             <Routes>
                                 <Route index path="/" element={<Home />} />
-                                <Route path="/about" element={<About />} />
+                                <Route path="/investor" element={<Investor />} />
                                 <Route path="/brdf" element={<BRDF />} />
                                 <Route path="/materials" element={<Materials />} />
-                                <Route path="/contact" element={<Contact />} />
-                                <Route path="/markdown" element={<Markdown />} />
-                                <Route path="/sample" element={<Sample />} />
-                                <Route path="/table" element={<Table />} />
-                                <Route path="/theme" element={<Theme />} />
+                                <Route path="/competitive" element={<Competitive />} />
+                                <Route path="/market" element={<Market />} />
+                                <Route path="/engineering" element={<Engineering />} />
+                                <Route path="/agent" element={<Agent />} />
+                                <Route path="/scripts" element={<Scripts />} />
                             </Routes>
                         </MdxProviderWrapper>
                     </main>
