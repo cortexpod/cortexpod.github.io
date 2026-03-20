@@ -103,7 +103,19 @@ export default defineConfig({
         createHtmlPlugin(),
         SitemapPlugin({
             hostname: "https://cortexpod.com",
-            dynamicRoutes: ["/about", "/contact", "/markdown", "/sample", "/table", "/home"],
+            dynamicRoutes: [
+                "/",
+                "/investor",
+                "/brdf",
+                "/materials",
+                "/competitive",
+                "/market",
+                "/engineering",
+                "/agent",
+                "/scripts",
+                "/hilberg",
+                "/riemannian",
+            ],
             // dynamicRoutes: routesList.map((route) => route.path).filter((path) => !path.includes(":"))
         }),
     ],
