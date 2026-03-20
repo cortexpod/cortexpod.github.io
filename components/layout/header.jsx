@@ -37,7 +37,7 @@ export function Header() {
                     </div>
                 </div> */}
             <a
-                href="https://openhuman.ai/"
+                href="https://cortexpod.github.io/"
                 target="blank"
                 rel="blank"
                 className=" contrast-more:text-gray-700 contrast-more:dark:text-gray-100 max-md:hidden whitespace-nowrap text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
