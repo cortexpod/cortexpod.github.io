@@ -1,6 +1,6 @@
 import React from "react"
 import { Navbar } from "./navbar"
-import { Github, Twitter } from "@/icons"
+import { Github, Telegram, Twitter } from "@/icons"
 import { Logo } from "@/icons/logo"
 import { Link } from "react-router-dom"
 
@@ -51,6 +51,9 @@ export function Header() {
             </a>
             <a href="https://twitter.com/cortexpodai" target="blank" rel="noreferrer">
                 <Twitter />
+            </a>
+            <a href="https://t.me/s/cortexpod" target="blank" rel="noreferrer">
+                <Telegram />
             </a>
         </Navbar>
         //     </nav>
